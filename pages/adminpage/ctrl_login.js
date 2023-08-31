@@ -9,10 +9,9 @@ import { authenticate$ } from "./model_admin_session.js";
 import "../../components/icon.js";
 
 export default async function(render) {
-    const css = await CSS(import.meta.url, "ctrl_login.css");
     const $form = createElement(`
         <div class="component_container component_page_adminlogin">
-            <style>${css}</style>
+            <style>${await CSS(import.meta.url, "ctrl_login.css")}</style>
             <form>
                 <div class="input_group">
                     <input type="password" name="password" placeholder="Password" class="component_input" autocomplete>
@@ -50,7 +49,7 @@ export default async function(render) {
     ));
 
     // feature: autofocus
-    effect(rxjs.of([]).pipe(
+    effect(rxjs.of(null).pipe(
         applyMutation(qs($form, "input"), "focus")
     ));
 

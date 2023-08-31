@@ -3,14 +3,14 @@ WIP of the complete frontend rewrite in vanilla JS
 Admin section:
 - [-] router:
   - [X] about
-  - [ ] backend
+  - [X] login page
   - [ ] settings => DOING
   - [ ] logs
+  - [ ] backend
   - [ ] setup
   - [X] middleware admin only -> missing notification on error, but is that really needed? probably not
   - [ ] middleware error page
   - [X] middleware side menu
-  - [ ] login page => DOING
 - [ ] not found page
 - [ ] other
   - [ ] side bar

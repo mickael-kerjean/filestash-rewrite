@@ -5,6 +5,7 @@ const routes = {
     "/admin/about": "/pages/adminpage/ctrl_about.js",
     "/admin/setup": "/pages/adminpage/ctrl_setup.js",
     "/admin/": "/pages/ctrl_adminpage.js",
+    "/logout": "/pages/ctrl_logout.js",
     "": "/pages/ctrl_notfound.js",
 };
 
