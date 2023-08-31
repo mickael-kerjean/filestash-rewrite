@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`form input text input - with properties 1`] = `
+<input
+  class="component_input"
+  name="general.host"
+  type="text"
+/>
+`;
+
+exports[`form input text input 1`] = `
+<input
+  autocapitalize="off"
+  autocomplete="off"
+  autocorrect="off"
+  class="component_input"
+  name="general.host"
+  spellcheck="off"
+  type="text"
+/>
+`;

@@ -1,0 +1,50 @@
+WIP of the complete frontend rewrite in vanilla JS
+
+Admin section:
+- [-] router:
+  - [-] backend
+  - [ ] settings => DOING
+  - [ ] logs
+  - [ ] about
+  - [ ] setup
+  - [X] middleware admin only -> missing notification on error, but is that really needed? probably not
+  - [ ] middleware error page
+  - [X] middleware side menu
+  - [ ] login page => DOING
+- [ ] not found page
+- [ ] other
+  - [ ] side bar
+  - [ ] form
+  - [ ] error page
+
+
+End user section:
+- [-] router:
+  - [ ] home
+  - [ ] share
+  - [ ] login
+  - [ ] viewer
+  - [ ] files
+  - [ ] tags
+  - [ ] logout
+  - [-] admin
+    - [ ] backend
+    - [ ] settings => DOING
+    - [ ] logs
+    - [ ] about
+    - [ ] setup
+    - [X] middleware admin only -> missing notification on error, but is that really needed? probably not
+    - [ ] middleware error page
+    - [X] middleware side menu
+    - [ ] login page => DOING
+  - [ ] not found page
+- [ ] other
+  - [ ] side bar
+  - [ ] form
+  - [ ] error page
+
+
+
+= design patterns
+- decorator aka composing controllers to build complex things
+- observer pattern

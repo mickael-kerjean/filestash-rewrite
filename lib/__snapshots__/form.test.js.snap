@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`form create simple form 1`] = `
+<div
+  class="formbuilder"
+>
+  <label>
+     field1 
+    <input
+      type="text"
+    />
+  </label>
+</div>
+`;
+
+exports[`form multiple field on simple form 1`] = `
+<div
+  class="formbuilder"
+>
+  <label>
+     field1 
+    <input
+      type="text"
+    />
+  </label>
+  <label>
+     field2 
+    <input
+      type="text"
+    />
+  </label>
+  <label>
+     field3 
+    <input
+      type="text"
+    />
+  </label>
+</div>
+`;
+
+exports[`form recursive form 1`] = `
+<div
+  class="formbuilder"
+>
+  <label>
+     field1 
+    <input
+      type="text"
+    />
+  </label>
+  <fieldset>
+    
+            
+    <legend>
+      field2
+    </legend>
+    
+        
+    <div>
+      <label>
+         field21 
+        <input
+          type="text"
+        />
+      </label>
+      <fieldset>
+        
+            
+        <legend>
+          field22
+        </legend>
+        
+        
+        <div>
+          <label>
+             field31 
+            <input
+              type="text"
+            />
+          </label>
+        </div>
+      </fieldset>
+    </div>
+  </fieldset>
+</div>
+`;

@@ -1,0 +1,153 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`admin::middleware::sidemenu snapshot 1`] = `
+<div
+  class="component_page_admin"
+>
+  
+                
+  <style />
+  
+                
+  <div
+    class="component_menu_sidebar no-select"
+  >
+    
+                    
+    <a
+      class="header"
+      href="/"
+    >
+      
+                        
+      <svg
+        class="arrow_left"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        
+                            
+        <path
+          d="m 16,7.16 -4.58,4.59 4.58,4.59 -1.41,1.41 -6,-6 6,-6 z"
+        />
+        
+                        
+      </svg>
+      
+                        
+      <span
+        data-bind="logo"
+      >
+        <svg
+          class="logo"
+          viewBox="0 0 512 512"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          
+                     
+          <path
+            d="M330 202a81 79 0 00-162 0 81 79 0 000 158 81 79 0 000-158m81 79a81 79 0 1181 79H168"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="35px"
+          />
+          
+                 
+        </svg>
+      </span>
+      
+                    
+    </a>
+    
+                    
+    <h2>
+      Admin console
+    </h2>
+    
+                    
+    <ul>
+      
+                        
+      <li>
+        
+                            
+        <a
+          data-link=""
+          href="/admin/backend"
+        >
+          
+                                Backend
+                            
+        </a>
+        
+                        
+      </li>
+      
+                        
+      <li>
+        
+                            
+        <a
+          class="active"
+          data-link=""
+        >
+          
+                                Settings
+                            
+        </a>
+        
+                        
+      </li>
+      
+                        
+      <li>
+        
+                            
+        <a
+          data-link=""
+          href="/admin/logs"
+        >
+          
+                                Logs
+                            
+        </a>
+        
+                        
+      </li>
+      
+                        
+      <li
+        class="version"
+      >
+        
+                            
+        <a
+          data-bind="version"
+          data-link=""
+          href="/admin/about"
+        >
+          __version__
+        </a>
+        
+                        
+      </li>
+      
+                    
+    </ul>
+    
+                
+  </div>
+  
+                
+  <div
+    class="page_container scroll-y"
+    data-bind="admin"
+  >
+    <div
+      id="children"
+    />
+  </div>
+  
+            
+</div>
+`;

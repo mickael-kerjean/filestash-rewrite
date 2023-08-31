@@ -1,0 +1,3154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`admin::ctrl_settings snapshot 1`] = `
+<div
+  class="component_settingspage sticky"
+>
+  
+            
+  <form
+    class="formbuilder"
+    data-bind="form"
+  >
+    <div
+      class="formbuilder"
+    >
+      <div>
+        
+                    
+        <h2>
+          General
+        </h2>
+        
+                    
+        <div>
+          <div>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Name:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    filestash\\""=""
+                    name="general.name"
+                    placeholder="Default: \\"
+                    type="text"
+                    value="MartelloRe"
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Name has shown in the UI
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Port:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="general.port"
+                    placeholder="Default: 8334"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Port on which the application is available.
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Host:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    demo.filestash.app\\""=""
+                    name="general.host"
+                    placeholder="Eg: \\"
+                    type="text"
+                    value=""
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    The host people need to use to access this server
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Secret Key:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="formbuilder_password"
+                  >
+                    
+                        
+                    <input
+                      class="component_input"
+                      name="general.secret_key"
+                      type="password"
+                      value="toJEcwv3uq3HezSI"
+                    />
+                    
+                        
+                    <component-icon
+                      name="eye"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    The key that's used to encrypt and decrypt content. Update this settings will invalidate existing user sessions and shared links, use with caution!
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Force Ssl:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="component_checkbox"
+                  >
+                    
+                        
+                    <input
+                      name="general.force_ssl"
+                      type="checkbox"
+                    />
+                    
+                        
+                    <span
+                      class="indicator"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Enable the web security mechanism called 'Strict Transport Security'
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Editor:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <select
+                    class="component_select"
+                    name="general.editor"
+                  >
+                    
+                        
+                    <option
+                      name="base"
+                    >
+                      base
+                    </option>
+                    ,
+                    <option
+                      name="emacs"
+                    >
+                      emacs
+                    </option>
+                    ,
+                    <option
+                      name="vim"
+                    >
+                      vim
+                    </option>
+                    
+                    
+                  </select>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Keybinding to be use in the editor. Default: "emacs"
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Fork Button:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="component_checkbox"
+                  >
+                    
+                        
+                    <input
+                      checked=""
+                      name="general.fork_button"
+                      type="checkbox"
+                    />
+                    
+                        
+                    <span
+                      class="indicator"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Display the fork button in the login screen
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Logout:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="general.logout"
+                    type="text"
+                    value=""
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Redirection URL whenever user click on the logout button
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Display Hidden:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="component_checkbox"
+                  >
+                    
+                        
+                    <input
+                      name="general.display_hidden"
+                      type="checkbox"
+                    />
+                    
+                        
+                    <span
+                      class="indicator"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Should files starting with a dot be visible by default?
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Refresh After Upload:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="component_checkbox"
+                  >
+                    
+                        
+                    <input
+                      checked=""
+                      name="general.refresh_after_upload"
+                      type="checkbox"
+                    />
+                    
+                        
+                    <span
+                      class="indicator"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Refresh directory listing after upload
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Upload Button:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="component_checkbox"
+                  >
+                    
+                        
+                    <input
+                      name="general.upload_button"
+                      type="checkbox"
+                    />
+                    
+                        
+                    <span
+                      class="indicator"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Display the upload button on any device
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Upload Pool Size:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="general.upload_pool_size"
+                    type="number"
+                    value="15"
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Maximum number of files upload in parallel (Default: 15)
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Filepage Default View:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <select
+                    class="component_select"
+                    name="general.filepage_default_view"
+                  >
+                    
+                        
+                    <option
+                      name="list"
+                    >
+                      list
+                    </option>
+                    ,
+                    <option
+                      name="grid"
+                    >
+                      grid
+                    </option>
+                    
+                    
+                  </select>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Default layout for files and folder on the file page
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Filepage Default Sort:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <select
+                    class="component_select"
+                    name="general.filepage_default_sort"
+                  >
+                    
+                        
+                    <option
+                      name="type"
+                    >
+                      type
+                    </option>
+                    ,
+                    <option
+                      name="date"
+                    >
+                      date
+                    </option>
+                    ,
+                    <option
+                      name="name"
+                    >
+                      name
+                    </option>
+                    
+                    
+                  </select>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Default order for files and folder on the file page
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Cookie Timeout:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="general.cookie_timeout"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Authentication Cookie expiration in minutes. Default: 60 * 24 * 7 = 1 week
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Custom Css:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <textarea
+                    class="component_textarea"
+                    name="general.custom_css"
+                    rows="8"
+                  >
+                                        
+                  </textarea>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Set custom css code for your instance
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+          </div>
+        </div>
+        
+                
+      </div>
+      <div>
+        
+                    
+        <h2>
+          Features
+        </h2>
+        
+                    
+        <div>
+          <div>
+            <fieldset>
+              
+                    
+              <legend
+                class="no-select"
+              >
+                Api
+              </legend>
+              
+                
+              <div>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Enable:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <div
+                        class="component_checkbox"
+                      >
+                        
+                        
+                        <input
+                          checked=""
+                          name="features.api.enable"
+                          type="checkbox"
+                        />
+                        
+                        
+                        <span
+                          class="indicator"
+                        />
+                        
+                    
+                      </div>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Enable/Disable the API
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Api Key:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <textarea
+                        class="component_textarea"
+                        name="features.api.api_key"
+                        placeholder="foobar *.filestash.app"
+                        rows="8"
+                      >
+                                            
+                      </textarea>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Format: '[mandatory:key] [optional:hostname]'. The hostname is used to enabled CORS for your application.
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+              </div>
+            </fieldset>
+            <fieldset>
+              
+                    
+              <legend
+                class="no-select"
+              >
+                Share
+              </legend>
+              
+                
+              <div>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Enable:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <div
+                        class="component_checkbox"
+                      >
+                        
+                        
+                        <input
+                          checked=""
+                          name="features.share.enable"
+                          type="checkbox"
+                        />
+                        
+                        
+                        <span
+                          class="indicator"
+                        />
+                        
+                    
+                      </div>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Enable/Disable the share feature
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Default Access:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <select
+                        class="component_select"
+                        name="features.share.default_access"
+                      >
+                        
+                        
+                        <option
+                          name="editor"
+                        >
+                          editor
+                        </option>
+                        ,
+                        <option
+                          name="viewer"
+                        >
+                          viewer
+                        </option>
+                        
+                    
+                      </select>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Default access for shared links
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Redirect:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <input
+                        class="component_input"
+                        path="features.share.redirect"
+                        readonly=""
+                        type="text"
+                        value="unknown element type string"
+                      />
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        When set, shared links will perform a redirection to another link. Example: https://example.com?full_path={{path}}
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+              </div>
+            </fieldset>
+            <fieldset>
+              
+                    
+              <legend
+                class="no-select"
+              >
+                Protection
+              </legend>
+              
+                
+              <div>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Iframe:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <input
+                        class="component_input"
+                        name="features.protection.iframe"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        list of domains who can use the application from an iframe. eg: https://www.filestash.app http://example.com
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Enable Chromecast:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <div
+                        class="component_checkbox"
+                      >
+                        
+                        
+                        <input
+                          checked=""
+                          name="features.protection.enable_chromecast"
+                          type="checkbox"
+                        />
+                        
+                        
+                        <span
+                          class="indicator"
+                        />
+                        
+                    
+                      </div>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Enable users to stream content on a chromecast device. This feature requires the browser to access google's server to download the chromecast SDK.
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Zip Timeout:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <input
+                        class="component_input"
+                        name="features.protection.zip_timeout"
+                        placeholder="Default: 60seconds"
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Timeout when user wants to download or extract a zip
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Ls Timeout:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <input
+                        class="component_input"
+                        name="features.protection.ls_timeout"
+                        placeholder="Default: 2"
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        failsafe timeout for listing files under a folder
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Enable:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <div
+                        class="component_checkbox"
+                      >
+                        
+                        
+                        <input
+                          checked=""
+                          name="features.protection.enable"
+                          placeholder="Default: true"
+                          type="checkbox"
+                        />
+                        
+                        
+                        <span
+                          class="indicator"
+                        />
+                        
+                    
+                      </div>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Enable/Disable active protection against scanners
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Disable Svg:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <div
+                        class="component_checkbox"
+                      >
+                        
+                        
+                        <input
+                          checked=""
+                          name="features.protection.disable_svg"
+                          placeholder="Default: true"
+                          type="checkbox"
+                        />
+                        
+                        
+                        <span
+                          class="indicator"
+                        />
+                        
+                    
+                      </div>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Disable the display of SVG documents
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+              </div>
+            </fieldset>
+            <fieldset>
+              
+                    
+              <legend
+                class="no-select"
+              >
+                Office
+              </legend>
+              
+                
+              <div>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Enable:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <div
+                        class="component_checkbox"
+                      >
+                        
+                        
+                        <input
+                          checked=""
+                          type="checkbox"
+                        />
+                        
+                        
+                        <span
+                          classname="indicator"
+                        />
+                        
+                    
+                      </div>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Enable/Disable the office suite to manage word, excel and powerpoint documents. This setting requires a restart to comes into effect
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <div
+                  class="advanced_form"
+                  style="overflow: hidden;"
+                >
+                  <label
+                    class="no-select"
+                  >
+                    
+            
+                    <div
+                      class="flex"
+                    >
+                      
+                
+                      <span>
+                        
+                    Onlyoffice Server:
+                
+                      </span>
+                      
+                
+                      <div
+                        style="width:100%;"
+                      >
+                        <input
+                          class="component_input"
+                          id="onlyoffice_server"
+                          name="features.office.enable"
+                          placeholder="Eg: http://127.0.0.1:8080"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                      
+            
+                    </div>
+                    
+            
+                    <div
+                      class="flex"
+                    >
+                      
+                
+                      <span
+                        class="nothing"
+                      />
+                      
+                
+                      <div
+                        style="width:100%;"
+                      >
+                        
+                    
+                        <div
+                          class="description"
+                        >
+                          Location of your OnlyOffice server
+                        </div>
+                        
+                
+                      </div>
+                      
+            
+                    </div>
+                    
+        
+                  </label>
+                  <label
+                    class="no-select"
+                  >
+                    
+            
+                    <div
+                      class="flex"
+                    >
+                      
+                
+                      <span>
+                        
+                    Can Download:
+                
+                      </span>
+                      
+                
+                      <div
+                        style="width:100%;"
+                      >
+                        <div
+                          class="component_checkbox"
+                        >
+                          
+                        
+                          <input
+                            checked=""
+                            id="onlyoffice_can_download"
+                            name="features.office.enable"
+                            type="checkbox"
+                          />
+                          
+                        
+                          <span
+                            class="indicator"
+                          />
+                          
+                    
+                        </div>
+                      </div>
+                      
+            
+                    </div>
+                    
+            
+                    <div
+                      class="flex"
+                    >
+                      
+                
+                      <span
+                        class="nothing"
+                      />
+                      
+                
+                      <div
+                        style="width:100%;"
+                      >
+                        
+                    
+                        <div
+                          class="description"
+                        >
+                          Display Download button in onlyoffice
+                        </div>
+                        
+                
+                      </div>
+                      
+            
+                    </div>
+                    
+        
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset>
+              
+                    
+              <legend
+                class="no-select"
+              >
+                Server
+              </legend>
+              
+                
+              <div>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Console Enable:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <div
+                        class="component_checkbox"
+                      >
+                        
+                        
+                        <input
+                          name="features.server.console_enable"
+                          placeholder="Default: false"
+                          type="checkbox"
+                        />
+                        
+                        
+                        <span
+                          class="indicator"
+                        />
+                        
+                    
+                      </div>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Enable/Disable the interactive web console on your instance. It will be available under \`/admin/tty/\` where username is 'admin' and password is your admin console
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+              </div>
+            </fieldset>
+            <fieldset>
+              
+                    
+              <legend
+                class="no-select"
+              >
+                Search
+              </legend>
+              
+                
+              <div>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Explore Timeout:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <input
+                        class="component_input"
+                        name="features.search.explore_timeout"
+                        placeholder="Default: 1500ms"
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        When full text search is disabled, the search engine recursively explore
+ directories to find results. Exploration can't last longer than what is configured here
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+              </div>
+            </fieldset>
+            <fieldset>
+              
+                    
+              <legend
+                class="no-select"
+              >
+                Video
+              </legend>
+              
+                
+              <div>
+                <label
+                  class="no-select"
+                >
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span>
+                      
+                    Enable Transcoder:
+                
+                    </span>
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      <div
+                        class="component_checkbox"
+                      >
+                        
+                        
+                        <input
+                          checked=""
+                          type="checkbox"
+                        />
+                        
+                        
+                        <span
+                          classname="indicator"
+                        />
+                        
+                    
+                      </div>
+                    </div>
+                    
+            
+                  </div>
+                  
+            
+                  <div
+                    class="flex"
+                  >
+                    
+                
+                    <span
+                      class="nothing"
+                    />
+                    
+                
+                    <div
+                      style="width:100%;"
+                    >
+                      
+                    
+                      <div
+                        class="description"
+                      >
+                        Enable/Disable on demand video transcoding. The transcoder
+                      </div>
+                      
+                
+                    </div>
+                    
+            
+                  </div>
+                  
+        
+                </label>
+                <div
+                  class="advanced_form"
+                  style="overflow: hidden;"
+                >
+                  <label
+                    class="no-select"
+                  >
+                    
+            
+                    <div
+                      class="flex"
+                    >
+                      
+                
+                      <span>
+                        
+                    Blacklist Format:
+                
+                      </span>
+                      
+                
+                      <div
+                        style="width:100%;"
+                      >
+                        <input
+                          class="component_input"
+                          id="transcoding_blacklist_format"
+                          name="features.video.enable_transcoder"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                      
+            
+                    </div>
+                    
+            
+                    <div
+                      class="flex"
+                    >
+                      
+                
+                      <span
+                        class="nothing"
+                      />
+                      
+                
+                      <div
+                        style="width:100%;"
+                      >
+                        
+                    
+                        <div
+                          class="description"
+                        >
+                          Video format that won't be transcoded
+                        </div>
+                        
+                
+                      </div>
+                      
+            
+                    </div>
+                    
+        
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        
+                
+      </div>
+      <div>
+        
+                    
+        <h2>
+          Log
+        </h2>
+        
+                    
+        <div>
+          <div>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Enable:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="component_checkbox"
+                  >
+                    
+                        
+                    <input
+                      checked=""
+                      type="checkbox"
+                    />
+                    
+                        
+                    <span
+                      classname="indicator"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  />
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <div
+              class="advanced_form"
+              style="overflow: hidden;"
+            >
+              <label
+                class="no-select"
+              >
+                
+            
+                <div
+                  class="flex"
+                >
+                  
+                
+                  <span>
+                    
+                    Level:
+                
+                  </span>
+                  
+                
+                  <div
+                    style="width:100%;"
+                  >
+                    <select
+                      class="component_select"
+                      id="log_level"
+                      name="log.enable"
+                    >
+                      
+                        
+                      <option
+                        name="DEBUG"
+                      >
+                        DEBUG
+                      </option>
+                      ,
+                      <option
+                        name="INFO"
+                      >
+                        INFO
+                      </option>
+                      ,
+                      <option
+                        name="WARNING"
+                      >
+                        WARNING
+                      </option>
+                      ,
+                      <option
+                        name="ERROR"
+                      >
+                        ERROR
+                      </option>
+                      
+                    
+                    </select>
+                  </div>
+                  
+            
+                </div>
+                
+            
+                <div
+                  class="flex"
+                >
+                  
+                
+                  <span
+                    class="nothing"
+                  />
+                  
+                
+                  <div
+                    style="width:100%;"
+                  >
+                    
+                    
+                    <div
+                      class="description"
+                    >
+                      Default: "INFO". This setting determines the level of detail at which log events are written to the log file
+                    </div>
+                    
+                
+                  </div>
+                  
+            
+                </div>
+                
+        
+              </label>
+            </div>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Telemetry:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="component_checkbox"
+                  >
+                    
+                        
+                    <input
+                      name="log.telemetry"
+                      type="checkbox"
+                    />
+                    
+                        
+                    <span
+                      class="indicator"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    We won't share anything with any third party. This will only to be used to improve Filestash
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+          </div>
+        </div>
+        
+                
+      </div>
+      <div>
+        
+                    
+        <h2>
+          Email
+        </h2>
+        
+                    
+        <div>
+          <div>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Server:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="email.server"
+                    placeholder="Default: smtp.gmail.com"
+                    type="text"
+                    value="smtp"
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Address of the SMTP email server.
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Port:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="email.port"
+                    placeholder="Default: 587"
+                    type="number"
+                    value="3456"
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Port of the SMTP email server. Eg: 587
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Username:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="email.username"
+                    placeholder="Eg: username@gmail.com"
+                    type="text"
+                    value="username"
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    The username for authenticating to the SMTP server.
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Password:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <div
+                    class="formbuilder_password"
+                  >
+                    
+                        
+                    <input
+                      class="component_input"
+                      name="email.password"
+                      placeholder="Eg: Your google password"
+                      type="password"
+                      value="klklk"
+                    />
+                    
+                        
+                    <component-icon
+                      name="eye"
+                    />
+                    
+                    
+                  </div>
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    The password associated with the SMTP username.
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    From:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="email.from"
+                    placeholder="Eg: username@gmail.com"
+                    type="text"
+                    value="jean@gmail.com"
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Email address visible on sent messages.
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+          </div>
+        </div>
+        
+                
+      </div>
+      <div>
+        
+                    
+        <h2>
+          Auth
+        </h2>
+        
+                    
+        <div>
+          <div>
+            <label
+              class="no-select"
+            >
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span>
+                  
+                    Admin:
+                
+                </span>
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  <input
+                    class="component_input"
+                    name="auth.admin"
+                    readonly=""
+                    type="password"
+                    value="$2a$05$ps0.vh3sRzgvvKCsX2N.MO.bk6lMmN7MgRycXLm1KsHyR6PPNiV22"
+                  />
+                </div>
+                
+            
+              </div>
+              
+            
+              <div
+                class="flex"
+              >
+                
+                
+                <span
+                  class="nothing"
+                />
+                
+                
+                <div
+                  style="width:100%;"
+                >
+                  
+                    
+                  <div
+                    class="description"
+                  >
+                    Password of the admin section.
+                  </div>
+                  
+                
+                </div>
+                
+            
+              </div>
+              
+        
+            </label>
+          </div>
+        </div>
+        
+                
+      </div>
+    </div>
+  </form>
+  
+        
+</div>
+`;

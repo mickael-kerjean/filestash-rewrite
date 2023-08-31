@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`admin::ctrl_login snapshot 1`] = `
+<div
+  class="component_container component_page_adminlogin"
+  style="margin-top: 256px;"
+>
+  
+            
+  <style />
+  
+            
+  <form>
+    
+                
+    <div
+      class="input_group"
+    >
+      
+                    
+      <input
+        autocomplete=""
+        class="component_input"
+        name="password"
+        placeholder="Password"
+        type="password"
+      />
+      
+                    
+      <button
+        class="transparent"
+      >
+        
+                        
+        <component-icon
+          name="arrow_right"
+        />
+        
+                    
+      </button>
+      
+                
+    </div>
+    
+            
+  </form>
+  
+        
+</div>
+`;

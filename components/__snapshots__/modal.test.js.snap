@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component::modal is an web component 1`] = `
+<body>
+  
+            
+  <div>
+    
+                
+    <component-modal>
+      <div
+        class="component_modal"
+        id="modal-box"
+      >
+        
+        
+        <style />
+        
+        
+        <div
+          style="opacity: 0; margin: 0px auto 0px auto;"
+        >
+          
+            
+          <div
+            class="component_popup"
+          >
+            
+                
+            <div
+              class="popup--content"
+            >
+              
+                    
+              <div
+                class="modal-message"
+                data-bind="body"
+              >
+                <div />
+              </div>
+              
+                
+            </div>
+            
+                
+            <div
+              class="buttons"
+            >
+              
+                    
+              <button
+                class="emphasis"
+                type="submit"
+              >
+                OK
+              </button>
+              
+                
+            </div>
+            
+            
+          </div>
+          
+        
+        </div>
+        
+    
+      </div>
+    </component-modal>
+    
+            
+  </div>
+  
+        
+</body>
+`;
