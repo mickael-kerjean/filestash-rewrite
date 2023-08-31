@@ -15,7 +15,7 @@ describe("admin::ctrl_about", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         getRelease.mockImplementation(() => rxjs.of({
-            html: `<table></table>`,
+            html: `<table>CTRL_ABOUT.TEST.JS</table>`,
         }));
         CSS.mockImplementation(() => Promise.resolve(""));
     });
@@ -32,5 +32,6 @@ describe("admin::ctrl_about", () => {
         // then
         expect($page).toBeTruthy();
         expect($page.classList.contains("component_page_about")).toBe(true);
+        expect($page.innerHTML).toContain("CTRL_ABOUT.TEST.JS");
     });
 });
