@@ -10,7 +10,7 @@ import transition from "./animate.js";
 export default AdminHOC(async function(render) {
     const $page = createElement(`
         <div class="component_page_about">
-            <style>await CSS(import.meta.url, "ctrl_about.css")</style>
+            <style>${await CSS(import.meta.url, "ctrl_about.css")}</style>
             <div data-bind="about"><Loader /></div>
         </div>
     `);

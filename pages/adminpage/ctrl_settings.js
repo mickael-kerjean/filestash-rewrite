@@ -5,11 +5,12 @@ import { createForm, mutateForm } from "../../lib/form.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
 import notification from "../../components/notification.js";
+import { get as getConfig } from "../../model/config.js";
 
-import transition from "./animate.js";
+import { get as getAdminConfig, save as saveConfig } from "./model_config.js";
 import { renderLeaf, useForm$, formObjToJSON$ } from "./helper_form.js";
+import transition from "./animate.js";
 import AdminHOC from "./decorator.js";
-import { get as getConfig, save as saveConfig } from "./model_config.js";
 
 export default AdminHOC(function(render) {
     const $container = createElement(`
@@ -22,8 +23,8 @@ export default AdminHOC(function(render) {
     `);
     render(transition($container));
 
-    const config$ = getConfig().pipe(
-        massageConfigRemoveKeysWeDontWantInTheSettingsPage,
+    const config$ = getAdminConfig().pipe(
+        reshapeConfigRemoveKeysWeDontWantInTheSettingsPage,
     );
 
     const tmpl = formTmpl({
@@ -43,7 +44,7 @@ export default AdminHOC(function(render) {
     const init$ = config$.pipe(
         rxjs.mergeMap((formSpec) => createForm(formSpec, tmpl)),
         rxjs.map(($form) => [$form]),
-        applyMutation(qs($container, "[data-bind=\"form\"]"), "replaceChildren"),
+        applyMutation(qs($container, `[data-bind="form"]`), "replaceChildren"),
         rxjs.share(),
     );
     effect(init$);
@@ -53,23 +54,31 @@ export default AdminHOC(function(render) {
         useForm$(() => qsa($container, `[data-bind="form"] [name]`)),
         rxjs.withLatestFrom(config$),
         rxjs.map(([formState, formSpec]) => mutateForm(formSpec, formState)),
+        reshapeConfigAddMiddlewareKey,
         formObjToJSON$(),
-        massageConfigReaddThingsThatGotPreviouslyRemoved,
+        reshapeConfigBeforeSave,
         saveConfig(),
     ));
 });
 
 
-const massageConfigRemoveKeysWeDontWantInTheSettingsPage = rxjs.map((cfg) => {
-    delete cfg.constant;
-    delete cfg.middleware;
-    return cfg;
+const reshapeConfigRemoveKeysWeDontWantInTheSettingsPage = rxjs.map((cfg) => {
+    const { constant, middleware, connections, ...other } = cfg;
+    return other;
 });
 
-const massageConfigReaddThingsThatGotPreviouslyRemoved = rxjs.pipe(
-    rxjs.withLatestFrom(getConfig()),
+const reshapeConfigAddMiddlewareKey = rxjs.pipe(
+    rxjs.withLatestFrom(getAdminConfig()),
     rxjs.map(([configWithMissingKeys, config]) => {
         configWithMissingKeys["middleware"] = config["middleware"];
         return configWithMissingKeys;
+    }),
+);
+
+const reshapeConfigBeforeSave = rxjs.pipe(
+    rxjs.withLatestFrom(getConfig()),
+    rxjs.map(([adminConfig, publicConfig]) => {
+        adminConfig["connections"] = publicConfig["connections"];
+        return adminConfig;
     }),
 );

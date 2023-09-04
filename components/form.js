@@ -68,7 +68,7 @@ function $renderInput(options = {}) {
             if (!datalist) return createElement(`
                 <input ${attr}
                     type="text"
-                    value="${safe(value || props.default)}"
+                    value="${safe(value)}"
                     class="component_input"
                 />
             `);
@@ -77,7 +77,7 @@ function $renderInput(options = {}) {
                 <input ${attr}
                     list="${dataListId}"
                     type="text"
-                    value="${safe(value || props.default)}"
+                    value="${safe(value)}"
                     class="component_input"
                 />
             `);
@@ -101,37 +101,36 @@ function $renderInput(options = {}) {
             return $wrapper;
         case "enable":
             return createElement(`
-                    <div class="component_checkbox">
-                        <input
-                            ${attr}
-                            type="checkbox"
-                            ${(value || props.default) ? "checked" : ""}
-                         />
-                        <span className="indicator"></span>
-                    </div>
-                `);
-        case "number":
-            return createElement(`
+                <div class="component_checkbox">
                     <input
                         ${attr}
-                        type="number"
-                        value="${safe(value || props.default)}"
+                        type="checkbox"
+                        ${(value === null ? props.default : value) ? "checked" : ""}
+                    />
+                    <span className="indicator"></span>
+                </div>
+            `);
+        case "number":
+            return createElement(`
+                <input
+                    ${attr}
+                    type="number"
+                    value="${safe(value)}"
+                    class="component_input"
+                />
+            `);
+        case "password":
+            const $node = createElement(`
+                <div class="formbuilder_password">
+                    <input
+                        ${attr}
+                        value="${safe(value)}"
+                        type="password"
                         class="component_input"
                     />
-                `);
-        case "password":
-            // TODO: click eye
-            const $node = createElement(`
-                    <div class="formbuilder_password">
-                        <input
-                            ${attr}
-                            value="${safe(value || props.default)}"
-                            type="password"
-                            class="component_input"
-                        />
-                        <component-icon name="eye"></component-icon>
-                    </div>
-                `);
+                    <component-icon name="eye"></component-icon>
+                </div>
+            `);
             const $icon = $node.querySelector("component-icon");
             if ($icon instanceof window.HTMLElement) {
                 $icon.onclick = function(e) {
@@ -146,81 +145,92 @@ function $renderInput(options = {}) {
             // TODO
         case "long_text":
             return createElement(`
-                    <textarea ${attr} class="component_textarea" rows="8">
-                    </textarea>
-                `);
+                <textarea ${attr} class="component_textarea" rows="8">
+                </textarea>
+            `);
         case "bcrypt": // TODO
             return createElement(`
-                    <input
-                        type="password"
-                        ${attr}
-                        value="${safe(value || props.default)}"
-                        readonly
-                        class="component_input"
-                    />
-                `);
+                <input
+                    type="password"
+                    ${attr}
+                    value="${safe(value)}"
+                    readonly
+                    class="component_input"
+                />
+            `);
         case "hidden":
             return createElement(`
-                    <input
-                        type="hidden"
-                        value=${safe(value)}
-                        name="${safe(path.join("."))}"
-                    />
-                `);
+                <input
+                    type="hidden"
+                    value=${safe(value)}
+                    name="${safe(path.join("."))}"
+                />
+            `);
         case "boolean":
             return createElement(`
-                    <div class="component_checkbox">
-                        <input
-                            ${attr}
-                            type="checkbox"
-                            ${(value || props.default) ? "checked" : ""}
-                        />
-                        <span class="indicator"></span>
-                    </div>
-                `);
-        case "select":
-            const renderOption = (name) => `<option name="${safe(name)}">${safe(name)}</option>`;
-            return createElement(`
-                    <select
+                <div class="component_checkbox">
+                    <input
                         ${attr}
-                        value="${safe(value || props.default)}"
-                        class="component_select"
+                        type="checkbox"
+                        ${(value === null ? props.default : value) ? "checked" : ""}
+                    />
+                    <span class="indicator"></span>
+                </div>
+            `);
+        case "select":
+            const renderOption = (name) => {
+                const optName = safe(name);
+                const formVal = safe(value || props.default);
+                return `
+                    <option
+                        name="${optName}"
+                        ${(optName === formVal) && "selected"}
                     >
-                        ${(options || []).map(renderOption)}
-                    </select>
-                `);
+                        ${optName}
+                    </option>
+                `;
+            }
+            return createElement(`
+                <select
+                    ${attr}
+                    value="${safe(value || props.default)}"
+                    class="component_select"
+                >
+                    ${(options || []).map(renderOption)}
+                </select>
+            `);
         case "date":
             return createElement(`
-                    <input
-                        ${attr}
-                        value="${safe(value || props.default)}"
-                        type="date"
-                        class="component_input"
-                    />
-                `);
+                <input
+                    ${attr}
+                    value="${safe(value || props.default)}"
+                    type="date"
+                    class="component_input"
+                />
+            `);
         case "datetime":
             return createElement(`
-                    <input
-                        ${attr}
-                        value="${safe(value || props.default)}"
-                        type="datetime-local"
-                        class="component_input"
-                    />
-                `);
+                <input
+                    ${attr}
+                    value="${safe(value || props.default)}"
+                    type="datetime-local"
+                    class="component_input"
+                />
+            `);
         case "image":
             return createElement(`<img id="${safe(id)}" src="${safe(value)}" />`);
         case "file":
             // return createElement() // TODO
         default:
             return createElement(`
-                    <input
-                        value="unknown element type ${type}"
-                        type="text"
-                        class="component_input"
-                        name="${safe(path.join("."))}"
-                        readonly
-                    />
-                `);
+                <input
+                    value="unknown element type ${type}"
+                    type="text"
+                    class="component_input"
+                    name="${safe(path.join("."))}"
+                    readonly
+                />
+            `);
         }
     };
 }
