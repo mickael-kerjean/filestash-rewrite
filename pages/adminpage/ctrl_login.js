@@ -2,11 +2,13 @@ import { createElement } from "../../lib/skeleton/index.js";
 import rxjs, { effect, stateMutation, applyMutation, preventDefault } from "../../lib/rx.js";
 import { qs } from "../../lib/dom.js";
 import { transition, zoomIn } from "../../lib/animate.js";
+import { AjaxError } from "../../lib/error.js";
+import ctrlError from "../ctrl_error.js";
 import { CSS } from "../../helpers/loader.js";
+import notification from "../../components/notification.js";
+import "../../components/icon.js";
 
 import { authenticate$ } from "./model_admin_session.js";
-
-import "../../components/icon.js";
 
 export default async function(render) {
     const $form = createElement(`
@@ -38,7 +40,16 @@ export default async function(render) {
         applyMutation(qs($form, "component-icon"), "setAttribute"),
         // STEP2: attempt to login
         rxjs.map(() => ({ password: qs($form, "[name=\"password\"]").value })),
-        authenticate$(),
+        rxjs.switchMap((creds) => authenticate$(creds).pipe(
+            rxjs.catchError((err) => {
+                if (err instanceof AjaxError && err.code() === "INTERNAL_SERVER_ERROR") {
+                    ctrlError(err)(render);
+                    return rxjs.EMPTY;
+                }
+                notification.error(err && err.message);
+                return rxjs.of(false);
+            }),
+        )),
         // STEP3: update the UI when authentication fails, happy path is handle at the middleware
         //        level one layer above as the login ctrl has no idea what to show after login
         rxjs.filter((ok) => !ok),
