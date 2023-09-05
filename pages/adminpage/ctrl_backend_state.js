@@ -1,11 +1,19 @@
 import rxjs from "../../lib/rx.js";
+import { get as getConfig } from "../../model/config.js";
 
 export { getBackends as getBackendAvailable } from "./model_backend.js";
 
 const backendsEnabled$ = new rxjs.BehaviorSubject([]);
 
+// backendsEnabled$.pipe(
+//     rxjs.withLatestFrom(getConfig()),
+//     rxjs.map(([backends, cfg]) => {
+//         return (backends || []).concat(cfg.connections || []);
+//     }),
+// ).subscribe((a) => console.log(a));
+
 export function getBackendEnabled() {
-    return backendsEnabled$.asObservable();
+    return backendsEnabled$;
 }
 
 export function addBackendEnabled(type) {

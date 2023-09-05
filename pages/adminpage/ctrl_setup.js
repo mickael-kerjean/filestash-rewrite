@@ -52,7 +52,7 @@ function componentStep1(render) {
                     </div>
                 </form>
             </div>
-            <style></style>
+            <style>${cssHideMenu}</style>
         </div>
     `);
     render(transition($page, {
@@ -70,11 +70,6 @@ function componentStep1(render) {
         rxjs.tap(() => animate($page, { time: 200, keyframes: slideXOut(-30) })),
         rxjs.delay(200),
         rxjs.tap(() => stepper$.next(2))
-    ));
-
-    // feature: hide side menu to remove distractions
-    effect(rxjs.of(cssHideMenu).pipe(
-        stateMutation(qs($page, "style"), "textContent")
     ));
 
     // feature: autofocus

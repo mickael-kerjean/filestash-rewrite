@@ -5,6 +5,7 @@ import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
 
 import { getAuthMiddlewareAvailable, getBackendEnabled, getBackendAvailable} from "./ctrl_backend_state.js";
+import "./component_box-item.js";
 
 export default function(render) {
     const $page = createElement(`
@@ -15,22 +16,17 @@ export default function(render) {
         </div>
     `);
 
-    // feature 1: setup the buttons
+    // feature: setup the buttons
     const init$ = getAuthMiddlewareAvailable().pipe(
         rxjs.map((specs) => Object.keys(specs).map((label) => createElement(`
-            <div class="box-item pointer no-select">
-                <div><strong>${label}</strong> <span class="no-select">
-                        <span class="icon">+</span>
-                    </span>
-                </div>
-            </div>
+            <div is="box-item" data-label="${label}"></div>
         `))),
         applyMutations(qs($page, ".box-container"), "appendChild"),
         rxjs.share(),
     );
     effect(init$);
 
-    // feature2: setup authentication forms
+    // feature: setup authentication forms
     const idp$ = getAuthMiddlewareAvailable().pipe(
         rxjs.mergeMap(async (obj) => {
             const idps = []
@@ -47,14 +43,14 @@ export default function(render) {
     );
     effect(idp$);
 
-    // feature3: setup the attribute mapping form
+    // feature: setup the attribute mapping form
     effect(init$.pipe(
         rxjs.first(),
         rxjs.mergeMap(async () => await createForm(attributeMapForm({}), formTmpl({}))),
         applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
     ));
 
-    // feature4: handle visibility of the idp form to match the currently selected backend
+    // feature: handle visibility of the idp form to match the currently selected backend
     const selectedIdp$ = init$.pipe(
         rxjs.mergeMap(($list) => $list),
         rxjs.mergeMap(($node) => onClick($node)),
@@ -87,7 +83,7 @@ export default function(render) {
         }),
     ));
 
-    // feature5: related backend values triggers creation/deletion of related backends
+    // feature: related backend values triggers creation/deletion of related backends
     effect(idp$.pipe(
         rxjs.mergeMap(() => rxjs.fromEvent(qs($page, `[name="attribute_mapping.related_backend"]`), "input")),
         rxjs.map((e) => e.target.value.split(",").map((val) => val.trim()).filter((t) => !!t)),
@@ -128,7 +124,7 @@ export default function(render) {
         }),
     ));
 
-    // feature6: handle attribute map change
+    // feature: handle attribute map change
     effect(idp$.pipe(
         rxjs.switchMap(() => rxjs.fromEvent($page, "input")),
         rxjs.map(() => [...new FormData(qs($page, "form"))].reduce((acc, [key, value]) => {
