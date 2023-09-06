@@ -136,10 +136,16 @@ function componentStep2(render) {
         reshapeConfigBeforeSave,
         rxjs.delay(300),
         rxjs.filter((config) => config["log"]["telemetry"] !== true),
-        rxjs.mergeMap((config) => new Promise((next) => modal.open($modal, {
-            withButtonsRight: "OK",
-            onQuit: () => next(config),
-        }))),
+        rxjs.mergeMap((config) => new Promise((next) => {
+            modal.open($modal, {
+                withButtonsRight: "OK",
+                onQuit: () => next(config),
+            });
+            qs($modal, `[type="checkbox"]`).oninput = (e) => {
+                if (!e.target.checked) return;
+                qs(document, "component-modal > div").click();
+            }
+        })),
         rxjs.filter(() => qs($modal, `[type="checkbox"]`).checked),
         rxjs.map((config) => {
             config["log"]["telemetry"] = true;
