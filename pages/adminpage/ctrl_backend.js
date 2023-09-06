@@ -10,12 +10,9 @@ import componentAuthenticationMiddleware from "./ctrl_backend_component_authenti
 export default AdminHOC(async function(render) {
     const $page = createElement(`
         <div class="component_dashboard sticky">
-            <div data-bind="backend"></div>
-
-            <h2>Authentication Middleware</h2>
-            <div data-bind="authentication_middleware"></div>
-
             <style>${await CSS(import.meta.url, "ctrl_backend.css")}</style>
+            <div data-bind="backend"></div>
+            <div data-bind="authentication_middleware"></div>
         </div>
     `);
     render(transition($page));

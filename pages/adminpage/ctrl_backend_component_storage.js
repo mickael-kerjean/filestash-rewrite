@@ -3,6 +3,7 @@ import rxjs, { effect, applyMutation, onClick } from "../../lib/rx.js";
 import { createForm } from "../../lib/form.js";
 import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl, format } from "../../components/form.js";
+import { generateSkeleton } from "../../components/skeleton.js";
 
 import { getBackendAvailable, getBackendEnabled, addBackendEnabled } from "./ctrl_backend_state.js";
 import "./component_box-item.js";
@@ -11,7 +12,9 @@ export default function(render) {
     const $page = createElement(`
         <div class="component_storagebackend">
             <h2>Storage Backend</h2>
-            <div class="box-container" data-bind="backend-available"></div>
+            <div class="box-container" data-bind="backend-available">
+                ${generateSkeleton(10)}
+            </div>
             <form data-bind="backend-enabled"></form>
         </div>
     `);
@@ -19,6 +22,7 @@ export default function(render) {
 
     // feature: setup the dom
     const init$ = getBackendAvailable().pipe(
+        rxjs.tap(() => qs($page, `[data-bind="backend-available"]`).innerHTML = ""),
         rxjs.mergeMap((specs) => Object.keys(specs)),
         rxjs.map((label) => createElement(`<div is="box-item" data-label="${label}"></div>`)),
         applyMutation(qs($page, `[data-bind="backend-available"]`), "appendChild"),

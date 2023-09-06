@@ -3,6 +3,7 @@ import rxjs, { effect, applyMutation, applyMutations, onClick } from "../../lib/
 import { createForm } from "../../lib/form.js";
 import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
+import { generateSkeleton } from "../../components/skeleton.js";
 
 import { getAuthMiddlewareAvailable, getBackendEnabled, getBackendAvailable} from "./ctrl_backend_state.js";
 import "./component_box-item.js";
@@ -10,7 +11,10 @@ import "./component_box-item.js";
 export default function(render) {
     const $page = createElement(`
         <div>
-            <div class="box-container"></div>
+            <h2 class="hidden">Authentication Middleware</h2>
+            <div class="box-container">
+                ${generateSkeleton(5)}
+            </div>
             <div data-bind="idp"></div>
             <form data-bind="attribute-mapping"></div>
         </div>
@@ -18,6 +22,10 @@ export default function(render) {
 
     // feature: setup the buttons
     const init$ = getAuthMiddlewareAvailable().pipe(
+        rxjs.tap(() => {
+            qs($page, `.box-container`).innerHTML = "";
+            qs($page, "h2").classList.remove("hidden");
+        }),
         rxjs.map((specs) => Object.keys(specs).map((label) => createElement(`
             <div is="box-item" data-label="${label}"></div>
         `))),
