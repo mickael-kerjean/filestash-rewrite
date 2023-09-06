@@ -24,7 +24,7 @@ export default AdminHOC(function(render) {
     render(transition($container));
 
     const config$ = getAdminConfig().pipe(
-        reshapeConfigRemoveKeysWeDontWantInTheSettingsPage,
+        reshapeConfigBeforeDisplay,
     );
 
     const tmpl = formTmpl({
@@ -54,28 +54,30 @@ export default AdminHOC(function(render) {
         useForm$(() => qsa($container, `[data-bind="form"] [name]`)),
         rxjs.withLatestFrom(config$),
         rxjs.map(([formState, formSpec]) => mutateForm(formSpec, formState)),
-        reshapeConfigAddMiddlewareKey,
-        formObjToJSON$(),
         reshapeConfigBeforeSave,
         saveConfig(),
     ));
 });
 
-
-const reshapeConfigRemoveKeysWeDontWantInTheSettingsPage = rxjs.map((cfg) => {
+// the config contains stuff wich we don't want to show in this page such as:
+// - the middleware info which is set in the backend page
+// - the connections info which is set in the backend page
+// - the constant info which is for the setup page
+const reshapeConfigBeforeDisplay = rxjs.map((cfg) => {
     const { constant, middleware, connections, ...other } = cfg;
     return other;
 });
 
-const reshapeConfigAddMiddlewareKey = rxjs.pipe(
+// before saving things back to the server, we want to hydrate the config and insert back:
+// - the middleware info
+// - the connections info
+const reshapeConfigBeforeSave = rxjs.pipe(
     rxjs.withLatestFrom(getAdminConfig()),
     rxjs.map(([configWithMissingKeys, config]) => {
         configWithMissingKeys["middleware"] = config["middleware"];
         return configWithMissingKeys;
     }),
-);
-
-const reshapeConfigBeforeSave = rxjs.pipe(
+    formObjToJSON$(),
     rxjs.withLatestFrom(getConfig()),
     rxjs.map(([adminConfig, publicConfig]) => {
         adminConfig["connections"] = publicConfig["connections"];

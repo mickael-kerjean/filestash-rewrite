@@ -1,16 +1,14 @@
-import { createElement } from "../lib/skeleton/index.js";
+import { createElement, nop } from "../lib/skeleton/index.js";
 import rxjs, { applyMutation } from "../lib/rx.js";
 import { animate } from "../lib/animate.js";
-import { qs } from "../lib/dom.js";
+import { qs, qsa } from "../lib/dom.js";
 
 import { CSS } from "../helpers/loader.js";
 
 export default class Modal {
-    static alert($node, opts) {
+    static open($node, opts = {}) {
         find().trigger($node, opts);
     }
-    // TODO: prompt()
-    // TODO: confirm()
 }
 
 const createModal = async () => createElement(`
@@ -22,30 +20,44 @@ const createModal = async () => createElement(`
                     <div class="modal-message" data-bind="body"><!-- MODAL BODY --></div>
                 </div>
                 <div class="buttons">
-                    <button type="submit" class="emphasis">OK</button>
+                    <button type="button"></button>
+                    <button type="submit" class="emphasis"></button>
                 </div>
             </div>
         </div>
     </div>
 `);
 
-export class ModalComponent extends window.HTMLElement {
+class ModalComponent extends window.HTMLElement {
     async trigger($node, opts = {}) {
         const $modal = await createModal();
-        const { onQuit } = opts;
+        const close$ = new rxjs.Subject();
+        const { onQuit = nop, withButtonsLeft = null, withButtonsRight = null } = opts;
+
+        // feature: build the dom
         qs($modal, `[data-bind="body"]`).replaceChildren($node);
         this.replaceChildren($modal);
+        qsa($modal, `.component_popup > div.buttons > button`).forEach(($button, i) => {
+            let currentLabel = null;
+            if (i === 0) currentLabel = withButtonsLeft;
+            else if (i === 1) currentLabel = withButtonsRight;
+
+            if (currentLabel === null) return $button.remove();
+            $button.textContent = currentLabel;
+            $button.onclick = () => close$.next(currentLabel);
+        });
+        effect(rxjs.fromEvent($modal, "click").pipe(
+            rxjs.filter((e) => e.target.getAttribute("id") === "modal-box"),
+            rxjs.tap(() => close$.next()),
+        ));
+        effect(rxjs.fromEvent(window, "keydown").pipe(
+            rxjs.filter((e) => e.keyCode === 27),
+            rxjs.tap(() => close$.next()),
+        ));
 
         // feature: closing the modal
-        effect(rxjs.merge(
-            rxjs.fromEvent($modal, "click").pipe(
-                rxjs.filter((e) => e.target.getAttribute("id") === "modal-box")
-            ),
-            rxjs.fromEvent(window, "keydown").pipe(
-                rxjs.filter((e) => e.keyCode === 27)
-            )
-        ).pipe(
-            rxjs.tap(() => typeof onQuit === "function" && onQuit()),
+        effect(close$.pipe(
+            rxjs.tap((label) => onQuit(label)),
             rxjs.tap(() => animate(qs($modal, "div > div"), {
                 time: 200,
                 keyframes: [
