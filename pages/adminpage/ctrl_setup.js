@@ -13,6 +13,7 @@ import ctrlError from "../ctrl_error.js";
 import WithShell from "./decorator_sidemenu.js";
 import { cssHideMenu } from "./animate.js";
 import { formObjToJSON$ } from "./helper_form.js";
+import { getDeps } from "./model_setup.js";
 
 import "../../components/icon.js";
 
@@ -97,11 +98,27 @@ function componentStep2(render) {
                 <component-icon name="arrow_left" data-bind="previous"></component-icon>
                 Summary
             </h4>
-            ${deps.map((t) => t.label).join("")}
+            <div data-bind="dependencies"></div>
             <style>${cssHideMenu}</style>
         </div>
     `);
     render($page);
+
+    // feature: show state of dependencies
+    effect(getDeps().pipe(
+        rxjs.mergeMap((deps) => deps),
+        rxjs.map(({ name_success, name_failure, pass, severe, message }) => ({
+            className: (severe ? "severe" : "") + " " +(pass ? "yes" : "no"),
+            label: pass ? name_success : name_failure,
+            extraLabel: pass ? "" : ": " + message,
+        })),
+        rxjs.map(({ label, className, extraLabel }) => createElement(`
+            <div class="component_dependency_installed ${className}">
+                <span>${label}</span>${extraLabel}
+            </div>
+        `)),
+        applyMutation(qs($page, `[data-bind="dependencies"]`), "appendChild"),
+    ))
 
     // feature: navigate previous step
     effect(rxjs.fromEvent(qs($page, `[data-bind="previous"]`), "click").pipe(
@@ -126,12 +143,12 @@ function componentStep2(render) {
                     <div class="component_checkbox">
                         <input type="checkbox">
                         <span class="indicator"></span>
-                        </div>I accept but the data is not to be share with any third party
+                    </div>
+                    I accept but the data is not to be share with any third party
                 </label>
             </form>
         </div>
     `);
-
     effect(getAdminConfig().pipe(
         reshapeConfigBeforeSave,
         rxjs.delay(300),

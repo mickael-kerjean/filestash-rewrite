@@ -13,6 +13,9 @@
     box-sizing: border-box;
     max-height: 100vh;
 }
+.component_page_admin .page_container.scroll-y > div {
+    max-width: 1300px;
+}
 @media screen and (max-width: 1000px) {
     .component_page_admin .page_container {
         padding-left: 30px;

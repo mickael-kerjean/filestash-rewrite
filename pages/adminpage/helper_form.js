@@ -44,7 +44,6 @@ export function useForm$($inputNodeList) {
 
 export function formObjToJSON$() {
     const formObjToJSON = (o, level = 0) => {
-        if (level === 0) delete o["constant"];
         const obj = Object.assign({}, o);
         Object.keys(obj).map((key) => {
             const t = obj[key];
