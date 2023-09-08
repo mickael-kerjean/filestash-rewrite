@@ -5,7 +5,7 @@ import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
 
-import { getAuthMiddlewareAvailable, getBackendEnabled, getBackendAvailable} from "./ctrl_backend_state.js";
+import { getMiddlewareAvailable, getBackendEnabled, getBackendAvailable} from "./ctrl_backend_state.js";
 import "./component_box-item.js";
 
 export default function(render) {
@@ -15,16 +15,18 @@ export default function(render) {
             <div class="box-container">
                 ${generateSkeleton(5)}
             </div>
-            <div data-bind="idp"></div>
-            <form data-bind="attribute-mapping"></div>
+            <div style="min-height: 300px">
+                <div data-bind="idp"></div>
+                <form data-bind="attribute-mapping"></div>
+            </div>
         </div>
     `);
 
     // feature: setup the buttons
-    const init$ = getAuthMiddlewareAvailable().pipe(
+    const init$ = getMiddlewareAvailable().pipe(
         rxjs.tap(() => {
-            qs($page, `.box-container`).innerHTML = "";
             qs($page, "h2").classList.remove("hidden");
+            qs($page, `.box-container`).innerHTML = "";
         }),
         rxjs.map((specs) => Object.keys(specs).map((label) => createElement(`
             <div is="box-item" data-label="${label}"></div>
@@ -34,8 +36,9 @@ export default function(render) {
     );
     effect(init$);
 
-    // feature: setup authentication forms
-    const idp$ = getAuthMiddlewareAvailable().pipe(
+    // feature: setup authentication forms. We put everything in the DOM
+    // so we don't lose the transient state when clicking around
+    const idp$ = getMiddlewareAvailable().pipe(
         rxjs.mergeMap(async (obj) => {
             const idps = []
             for (let key in obj) {
@@ -80,12 +83,13 @@ export default function(render) {
 
             qsa($page, ".box-item").forEach(($button) => {
                 const $icon = qs($button, ".icon");
+                $icon.style.transition = "transform 0.2s ease";
                 if (qs($button, "strong").textContent === currentMiddleware) {
-                    $icon.innerHTML = `<img class="component_icon" draggable="false" src="/assets/icons/delete.svg" alt="delete">`;
                     $button.classList.add("active");
+                    $icon.style.transform = "rotate(45deg)";
                 } else {
-                    $icon.innerHTML = "+";
                     $button.classList.remove("active");
+                    $icon.style.transform = "";
                 }
             })
         }),

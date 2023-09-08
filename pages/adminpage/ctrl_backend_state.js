@@ -5,36 +5,43 @@ export { getBackends as getBackendAvailable } from "./model_backend.js";
 
 const backendsEnabled$ = new rxjs.BehaviorSubject([]);
 
-// backendsEnabled$.pipe(
-//     rxjs.withLatestFrom(getConfig()),
-//     rxjs.map(([backends, cfg]) => {
-//         return (backends || []).concat(cfg.connections || []);
-//     }),
-// ).subscribe((a) => console.log(a));
+export async function init() {
+    return await getConfig().pipe(
+        rxjs.map(({ connections }) => connections),
+        rxjs.tap((connections) => backendsEnabled$.next(backendsEnabled$.value.concat(connections))),
+    ).toPromise();
+}
 
 export function getBackendEnabled() {
     return backendsEnabled$;
 }
 
 export function addBackendEnabled(type) {
-    const record = { type, label: type };
-    const values = backendsEnabled$.value.filter((b) => b.type === type);
-    for (let i=0; i<values.length; i++) {
-        if (values[i].label === record.label) {
-            record.label = `${type} ${values.length+1}`;
-        }
+    const existingLabels = new Set();
+    backendsEnabled$.value.forEach((obj) => {
+        existingLabels.add(obj.label.toLowerCase());
+    });
+
+    let label = "", i = 1;
+    while (true) {
+        label = type + (i === 1 ? "" : ` ${i}`);
+        if (existingLabels.has(label) === false) break;
+        i+=1;
     }
-    backendsEnabled$.next(backendsEnabled$.value.concat(record));
+
+    backendsEnabled$.next(backendsEnabled$.value.concat({ type, label }));
 }
 
-export function removeBackendEnabled(n) {
-
+export function removeBackendEnabled(labelToRemove) {
+    backendsEnabled$.next(backendsEnabled$.value.filter(({ label }) => {
+        return label !== labelToRemove;
+    }));
 }
 
-const authEnabled$ = new rxjs.BehaviorSubject(null);
+const middlewareEnabled$ = new rxjs.BehaviorSubject(null);
 
-export { getAuthMiddleware as getAuthMiddlewareAvailable } from "./model_auth_middleware.js";
+export { getAuthMiddleware as getMiddlewareAvailable } from "./model_auth_middleware.js";
 
-export function getEnabledAuthMiddleware() {
-    return authEnabled$.asObservable();
+export function getMiddlewareEnabled() {
+    return middlewareEnabled$.asObservable();
 }
