@@ -1,12 +1,14 @@
 import { createElement } from "../../lib/skeleton/index.js";
-import rxjs, { effect, applyMutation, applyMutations, onClick } from "../../lib/rx.js";
+import rxjs, { effect, applyMutations, onClick } from "../../lib/rx.js";
 import { createForm } from "../../lib/form.js";
 import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
 
 import { init, getBackendAvailable, getBackendEnabled, addBackendEnabled, removeBackendEnabled } from "./ctrl_backend_state.js";
-import { useForm$ } from "./helper_form.js";
+import { formObjToJSON$ } from "./helper_form.js";
+import { get as getAdminConfig, save as saveConfig } from "./model_config.js";
+
 import "./component_box-item.js";
 
 export default async function(render) {
@@ -42,8 +44,8 @@ export default async function(render) {
             });
             return enabledSet;
         }),
-        rxjs.tap((set) => qsa($page, `[is="box-item"]`).forEach(($button) => {
-            set.has($button.getAttribute("data-label")) ?
+        rxjs.tap((backends) => qsa($page, `[is="box-item"]`).forEach(($button) => {
+            backends.has($button.getAttribute("data-label")) ?
                 $button.classList.add("active") :
                 $button.classList.remove("active");
         })),
@@ -53,14 +55,13 @@ export default async function(render) {
     effect(init$.pipe(
         rxjs.mergeMap(($nodes) => $nodes),
         rxjs.mergeMap(($node) => onClick($node)),
-        rxjs.tap(($node) => addBackendEnabled($node.getAttribute("data-label"))),
-        // TODO SAVE?
+        rxjs.map(($node) => addBackendEnabled($node.getAttribute("data-label"))),
+        saveConnections,
     ));
 
     // feature: setup form
     const setupForm$ = getBackendEnabled().pipe(
         // initialise the forms
-        rxjs.tap(() => qs($page, `[data-bind="backend-enabled"]`).innerHTML = ""),
         rxjs.mergeMap((enabled) => Promise.all(enabled.map(({ type, label }) => createForm({ [type]: {
             "": { type: "text", placeholder: "Label", value: label },
         }}, formTmpl({
@@ -79,7 +80,6 @@ export default async function(render) {
                         <img class="component_icon" draggable="false" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MS45NzYgNTEuOTc2Ij4KICA8cGF0aCBzdHlsZT0iZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eTowLjUzMzMzMjg1O3N0cm9rZS13aWR0aDoxLjQ1NjgxMTE5IiBkPSJtIDQxLjAwNTMxLDQwLjg0NDA2MiBjIC0xLjEzNzc2OCwxLjEzNzc2NSAtMi45ODIwODgsMS4xMzc3NjUgLTQuMTE5ODYxLDAgTCAyNi4wNjg2MjgsMzAuMDI3MjM0IDE0LjczNzU1MSw0MS4zNTgzMSBjIC0xLjEzNzc3MSwxLjEzNzc3MSAtMi45ODIwOTMsMS4xMzc3NzEgLTQuMTE5ODYxLDAgLTEuMTM3NzcyMiwtMS4xMzc3NjggLTEuMTM3NzcyMiwtMi45ODIwODggMCwtNC4xMTk4NjEgTCAyMS45NDg3NjYsMjUuOTA3MzcyIDExLjEzMTkzOCwxNS4wOTA1NTEgYyAtMS4xMzc3NjQ3LC0xLjEzNzc3MSAtMS4xMzc3NjQ3LC0yLjk4MzU1MyAwLC00LjExOTg2MSAxLjEzNzc3NCwtMS4xMzc3NzIxIDIuOTgyMDk4LC0xLjEzNzc3MjEgNC4xMTk4NjUsMCBMIDI2LjA2ODYyOCwyMS43ODc1MTIgMzYuMzY5NzM5LDExLjQ4NjM5OSBjIDEuMTM3NzY4LC0xLjEzNzc2OCAyLjk4MjA5MywtMS4xMzc3NjggNC4xMTk4NjIsMCAxLjEzNzc2NywxLjEzNzc2OSAxLjEzNzc2NywyLjk4MjA5NCAwLDQuMTE5ODYyIEwgMzAuMTg4NDg5LDI1LjkwNzM3MiA0MS4wMDUzMSwzNi43MjQxOTcgYyAxLjEzNzc3MSwxLjEzNzc2NyAxLjEzNzc3MSwyLjk4MjA5MSAwLDQuMTE5ODY1IHoiIC8+Cjwvc3ZnPgo=" alt="close">
                     </div>
                 `);
-                $remove.onclick = () => removeBackendEnabled(qs($fieldset, "input").value);
                 $fieldset.appendChild($remove);
                 return $fieldset;
             },
@@ -92,15 +92,25 @@ export default async function(render) {
             `)];
             return nodeList;
         }),
+        rxjs.tap(() => qs($page, `[data-bind="backend-enabled"]`).innerHTML = ""),
         applyMutations(qs($page, `[data-bind="backend-enabled"]`), "appendChild"),
         rxjs.share(),
     );
     effect(setupForm$);
 
+    // feature: remove an existing backend
+    effect(setupForm$.pipe(
+        rxjs.mergeMap(($nodes) => $nodes),
+        rxjs.mergeMap(($node) => onClick($node.querySelector(".icons"))),
+        rxjs.map(($node) => qs($node.parentElement, "input").value),
+        rxjs.map((label) => removeBackendEnabled(label)),
+        saveConnections,
+    ));
+
+    // feature: form input change handler
     effect(setupForm$.pipe(
         rxjs.mergeMap((forms) => forms),
         rxjs.mergeMap(($el) => rxjs.fromEvent($el, "input")),
-        // rxjs.debounceTime(1000),
         rxjs.map(() => new FormData(qs($page, `[data-bind="backend-enabled"]`))),
         rxjs.map((formData) => {
             const connections = [];
@@ -109,6 +119,15 @@ export default async function(render) {
             }
             return connections;
         }),
-        rxjs.tap((a) => console.log(a)),
+        saveConnections,
     ));
 }
+
+const saveConnections = rxjs.pipe(
+    rxjs.withLatestFrom(getAdminConfig().pipe(formObjToJSON$())),
+    rxjs.map(([connections, config]) => ({
+        ...config,
+        connections,
+    })),
+    saveConfig(),
+);

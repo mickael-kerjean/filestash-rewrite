@@ -8,12 +8,12 @@ const backendsEnabled$ = new rxjs.BehaviorSubject([]);
 export async function init() {
     return await getConfig().pipe(
         rxjs.map(({ connections }) => connections),
-        rxjs.tap((connections) => backendsEnabled$.next(backendsEnabled$.value.concat(connections))),
+        rxjs.tap((connections) => backendsEnabled$.next(connections)),
     ).toPromise();
 }
 
 export function getBackendEnabled() {
-    return backendsEnabled$;
+    return backendsEnabled$.asObservable();
 }
 
 export function addBackendEnabled(type) {
@@ -29,13 +29,17 @@ export function addBackendEnabled(type) {
         i+=1;
     }
 
-    backendsEnabled$.next(backendsEnabled$.value.concat({ type, label }));
+    const b = backendsEnabled$.value.concat({ type, label });
+    backendsEnabled$.next(b);
+    return b;
 }
 
 export function removeBackendEnabled(labelToRemove) {
-    backendsEnabled$.next(backendsEnabled$.value.filter(({ label }) => {
+    const b = backendsEnabled$.value.filter(({ label }) => {
         return label !== labelToRemove;
-    }));
+    });
+    backendsEnabled$.next(b);
+    return b;
 }
 
 const middlewareEnabled$ = new rxjs.BehaviorSubject(null);
