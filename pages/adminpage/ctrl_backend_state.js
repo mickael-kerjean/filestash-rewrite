@@ -49,3 +49,9 @@ export { getAuthMiddleware as getMiddlewareAvailable } from "./model_auth_middle
 export function getMiddlewareEnabled() {
     return middlewareEnabled$.asObservable();
 }
+
+export function toggleMiddleware(type) {
+    const newValue = middlewareEnabled$.value === type ? null : type;
+    middlewareEnabled$.next(newValue);
+    return newValue;
+}

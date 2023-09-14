@@ -5,7 +5,10 @@ import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
 
-import { getMiddlewareAvailable, getBackendEnabled, getBackendAvailable} from "./ctrl_backend_state.js";
+import {
+    getMiddlewareAvailable, getMiddlewareEnabled, toggleMiddleware,
+    getBackendAvailable, getBackendEnabled,
+} from "./ctrl_backend_state.js";
 import "./component_box-item.js";
 
 export default function(render) {
@@ -36,9 +39,28 @@ export default function(render) {
     );
     effect(init$);
 
-    // feature: setup authentication forms. We put everything in the DOM
-    // so we don't lose the transient state when clicking around
-    const idp$ = getMiddlewareAvailable().pipe(
+    // feature: state of buttons
+    effect(init$.pipe(
+        rxjs.mergeMap(() => getMiddlewareEnabled()),
+        rxjs.filter((backend) => !!backend),
+        rxjs.tap((backend) => qsa($page, `[is="box-item"]`).forEach(($button) => {
+            $button.getAttribute("data-label") === backend ?
+                $button.classList.add("active") :
+                $button.classList.remove("active");
+        })),
+    ));
+
+    // feature: click to select a middleware
+    effect(init$.pipe(
+        rxjs.mergeMap(($nodes) => $nodes),
+        rxjs.mergeMap(($node) => onClick($node)),
+        rxjs.map(($node) => toggleMiddleware($node.getAttribute("data-label"))),
+        saveMiddleware,
+    ));
+
+    // feature: setup forms.
+    // We put everything in the DOM so we don't lose transient state when clicking around
+    const setupForm$ = getMiddlewareAvailable().pipe(
         rxjs.mergeMap(async (obj) => {
             const idps = []
             for (let key in obj) {
@@ -52,24 +74,11 @@ export default function(render) {
         applyMutations(qs($page, `[data-bind="idp"]`), "appendChild"),
         rxjs.share(),
     );
-    effect(idp$);
-
-    // feature: setup the attribute mapping form
-    effect(init$.pipe(
-        rxjs.first(),
-        rxjs.mergeMap(async () => await createForm(attributeMapForm({}), formTmpl({}))),
-        applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
-    ));
+    effect(setupForm$);
 
     // feature: handle visibility of the idp form to match the currently selected backend
-    const selectedIdp$ = init$.pipe(
-        rxjs.mergeMap(($list) => $list),
-        rxjs.mergeMap(($node) => onClick($node)),
-        // TODO:
-        rxjs.map(($node) => qs($node, "strong").textContent.trim()),
-        rxjs.scan((state, current) => state === current ? null : current, null)
-    );
-    effect(selectedIdp$.pipe(
+    effect(setupForm$.pipe(
+        rxjs.mergeMap(() => getMiddlewareEnabled()),
         rxjs.tap((currentMiddleware) => {
             qsa($page, `[data-bind="idp"] .formbuilder`).forEach(($node) => {
                 $node.getAttribute("id") === currentMiddleware ?
@@ -95,8 +104,15 @@ export default function(render) {
         }),
     ));
 
+    // feature: setup the attribute mapping form
+    effect(init$.pipe(
+        rxjs.first(),
+        rxjs.mergeMap(async () => await createForm(attributeMapForm({}), formTmpl({}))),
+        applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
+    ));
+
     // feature: related backend values triggers creation/deletion of related backends
-    effect(idp$.pipe(
+    effect(setupForm$.pipe(
         rxjs.mergeMap(() => rxjs.fromEvent(qs($page, `[name="attribute_mapping.related_backend"]`), "input")),
         rxjs.map((e) => e.target.value.split(",").map((val) => val.trim()).filter((t) => !!t)),
         // rxjs.withLatestFrom(getBackendEnabled()),
@@ -136,8 +152,8 @@ export default function(render) {
         }),
     ));
 
-    // feature: handle attribute map change
-    effect(idp$.pipe(
+    // feature: form input change handler
+    effect(setupForm$.pipe(
         rxjs.switchMap(() => rxjs.fromEvent($page, "input")),
         rxjs.map(() => [...new FormData(qs($page, "form"))].reduce((acc, [key, value]) => {
             acc[key] = value;
@@ -148,6 +164,10 @@ export default function(render) {
 
     render($page);
 }
+
+const saveMiddleware = rxjs.pipe(
+    rxjs.tap((a) => console.log("SAVING", a)),
+);
 
 const attributeMapForm = (selectedBackends) => ({
     "attribute_mapping": {
@@ -160,41 +180,3 @@ const attributeMapForm = (selectedBackends) => ({
         ...selectedBackends,
     }
 });
-
-/*
-
-  <div class="box-item pointer no-select">
-    <div>htpasswd <span class="no-select">
-        <span class="icon">+</span>
-      </span>
-    </div>
-  </div>
-  <div class="box-item pointer no-select">
-    <div>ldap <span class="no-select">
-        <span class="icon">+</span>
-      </span>
-    </div>
-  </div>
-  <div class="box-item pointer no-select active">
-    <div>openid <span class="no-select">
-        <span class="icon">
-          <img class="component_icon" draggable="false" src="/assets/icons/delete.svg" alt="delete">
-        </span>
-      </span>
-    </div>
-  </div>
-  <div class="box-item pointer no-select">
-    <div>passthrough <span class="no-select">
-        <span class="icon">+</span>
-      </span>
-    </div>
-  </div>
-  <div class="box-item pointer no-select">
-    <div>saml <span class="no-select">
-        <span class="icon">+</span>
-      </span>
-    </div>
-  </div>
-</div>
-
-*/
