@@ -145,8 +145,7 @@ function $renderInput(options = {}) {
             // TODO
         case "long_text":
             return createElement(`
-                <textarea ${attr} class="component_textarea" rows="8">
-                </textarea>
+                <textarea ${attr} class="component_textarea" rows="8"></textarea>
             `);
         case "bcrypt": // TODO
             return createElement(`
