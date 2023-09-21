@@ -11,7 +11,7 @@ import {
     getMiddlewareAvailable, getMiddlewareEnabled, toggleMiddleware,
     getBackendAvailable, getBackendEnabled,
 } from "./ctrl_backend_state.js";
-import { formObjToJSON$ } from "./helper_form.js";
+import { formObjToJSON$, renderLeaf } from "./helper_form.js";
 import { get as getAdminConfig, save as saveConfig } from "./model_config.js";
 
 import "./component_box-item.js";
@@ -72,8 +72,12 @@ export default async function(render) {
         rxjs.mergeMap(async ([available, { identity_provider, attribute_mapping }]) => {
             const idps = []
             for (let key in available) {
-                // TODO: initial values
-                const $idp = await createForm({[key]: available[key]}, formTmpl({}));
+                const tmpl = available[key];
+                delete tmpl.type;
+                const $idp = await createForm({ [key]: tmpl }, formTmpl({
+                    renderLeaf,
+                    autocomplete: false,
+                }));
                 $idp.classList.add("hidden");
                 $idp.setAttribute("id", key);
                 idps.push($idp);

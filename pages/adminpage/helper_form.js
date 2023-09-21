@@ -13,7 +13,7 @@ export function renderLeaf({ format, type, label, description }) {
             <div class="flex">
                 <span class="nothing"></span>
                 <div style="width:100%;">
-                    <div class="description">${description || ""}</div>
+                    <div class="description">${(description || "").replaceAll("\n", "<br>")}</div>
                 </div>
             </div>
         </label>
