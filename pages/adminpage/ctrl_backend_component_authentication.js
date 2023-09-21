@@ -4,14 +4,19 @@ import { createForm } from "../../lib/form.js";
 import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
+import { get as getConfig } from "../../model/config.js";
 
 import {
+    initMiddleware,
     getMiddlewareAvailable, getMiddlewareEnabled, toggleMiddleware,
     getBackendAvailable, getBackendEnabled,
 } from "./ctrl_backend_state.js";
+import { formObjToJSON$ } from "./helper_form.js";
+import { get as getAdminConfig, save as saveConfig } from "./model_config.js";
+
 import "./component_box-item.js";
 
-export default function(render) {
+export default async function(render) {
     const $page = createElement(`
         <div>
             <h2 class="hidden">Authentication Middleware</h2>
@@ -19,11 +24,13 @@ export default function(render) {
                 ${generateSkeleton(5)}
             </div>
             <div style="min-height: 300px">
-                <div data-bind="idp"></div>
+                <form data-bind="idp"></form>
                 <form data-bind="attribute-mapping"></div>
             </div>
         </div>
     `);
+    render($page);
+    await initMiddleware();
 
     // feature: setup the buttons
     const init$ = getMiddlewareAvailable().pipe(
@@ -61,10 +68,12 @@ export default function(render) {
     // feature: setup forms.
     // We put everything in the DOM so we don't lose transient state when clicking around
     const setupForm$ = getMiddlewareAvailable().pipe(
-        rxjs.mergeMap(async (obj) => {
+        rxjs.withLatestFrom(getMiddlewareEnabled().pipe()),
+        rxjs.mergeMap(async ([available, { identity_provider, attribute_mapping }]) => {
             const idps = []
-            for (let key in obj) {
-                const $idp = await createForm({[key]: obj[key]}, formTmpl({}));
+            for (let key in available) {
+                // TODO: initial values
+                const $idp = await createForm({[key]: available[key]}, formTmpl({}));
                 $idp.classList.add("hidden");
                 $idp.setAttribute("id", key);
                 idps.push($idp);
@@ -107,24 +116,45 @@ export default function(render) {
     // feature: setup the attribute mapping form
     effect(init$.pipe(
         rxjs.first(),
-        rxjs.mergeMap(async () => await createForm(attributeMapForm({}), formTmpl({}))),
+        rxjs.mergeMap(() => getBackendEnabled().pipe(rxjs.withLatestFrom(
+            getMiddlewareEnabled()
+        ))),
+        rxjs.mergeMap(async ([backends, middlewares]) => await createForm(attributeMapForm(backends, middlewares), formTmpl({}))),
         applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
+    ));
+
+    // feature: setup autocompletion of related backend field
+    effect(getBackendEnabled().pipe(
+        rxjs.map((backends) => backends.map(({ label }) => label)),
+        // rxjs.tap((a) => console.log("enabled", a))
+        // TODO: setup autocomplete based on labels
     ));
 
     // feature: related backend values triggers creation/deletion of related backends
     effect(setupForm$.pipe(
-        rxjs.mergeMap(() => rxjs.fromEvent(qs($page, `[name="attribute_mapping.related_backend"]`), "input")),
-        rxjs.map((e) => e.target.value.split(",").map((val) => val.trim()).filter((t) => !!t)),
-        // rxjs.withLatestFrom(getBackendEnabled()),
+        rxjs.mergeMap(() => rxjs.merge(
+            rxjs.fromEvent(qs($page, `[name="attribute_mapping.related_backend"]`), "input").pipe(
+                rxjs.map((e) => e.target.value),
+            ),
+            rxjs.of(qs($page, `[name="attribute_mapping.related_backend"]`).value), // TODO: not triggered, probably should get from source
+        )),
+        rxjs.map((value) => value.split(",").map((val) => val.trim()).filter((t) => !!t)),
+        rxjs.withLatestFrom(getBackendEnabled()),
+        rxjs.map(([inputBackends, enabledBackends]) =>
+            inputBackends
+                .map((label) => enabledBackends.find((b) => b.label === label))
+                .filter((label) => !!label)
+        ),
+        // rxjs.map((backends) => backends.map((type) => ({type, label: type}))),
         rxjs.withLatestFrom(getBackendAvailable()),
         rxjs.map(([backends, formSpec]) => {
             let spec = {};
-            backends.forEach((type) => {
+            backends.forEach(({ label, type }) => {
                 if (formSpec[type]) {
-                    spec[type] = formSpec[type];
-                    delete spec[type]["advanced"];
-                    for (let key in spec[type]) {
-                        delete spec[type][key]["id"];
+                    spec[label] = formSpec[type];
+                    delete spec[label]["advanced"];
+                    for (let key in spec[label]) {
+                        delete spec[label][key]["id"];
                     }
                 }
             });
@@ -155,28 +185,66 @@ export default function(render) {
     // feature: form input change handler
     effect(setupForm$.pipe(
         rxjs.switchMap(() => rxjs.fromEvent($page, "input")),
-        rxjs.map(() => [...new FormData(qs($page, "form"))].reduce((acc, [key, value]) => {
-            acc[key] = value;
-            return acc;
-        }, {})),
-        rxjs.tap((e) => console.log("INPUT CHANGE", JSON.stringify(e)))
+        rxjs.mergeMap(() => getMiddlewareEnabled().pipe(rxjs.first())),
+        saveMiddleware,
     ));
-
-    render($page);
 }
 
 const saveMiddleware = rxjs.pipe(
+    rxjs.map((authType) => {
+        const middleware = {
+            identity_provider: {},
+            attribute_mapping: {},
+        };
+        if (!authType) return middleware;
+
+        let formValues = [...new FormData(document.querySelector(`[data-bind="idp"]`))];
+        middleware.identity_provider = {
+            type: authType,
+            params: JSON.stringify(
+                formValues
+                    .filter(([key, value]) => key.startsWith(`${authType}.`)) // remove elements that aren't in scope
+                    .map(([key, value]) => [key.replace(new RegExp(`^${authType}\.`), ""), value]) // format the relevant keys
+                    .reduce((acc, [key, value]) => { // transform onto something ready to be saved
+                        if (key === "type") return acc;
+                        return {
+                            ...acc,
+                            [key]: value,
+                        };
+                    }, {}),
+            ),
+        };
+
+        formValues = [...new FormData(document.querySelector(`[data-bind="attribute-mapping"]`))];
+        middleware.attribute_mapping = {
+            related_backend: formValues.shift()[1],
+            params: JSON.stringify(formValues.reduce((acc, [key, value]) => {
+                const k = key.split(".");
+                if (k.length !== 2) return acc;
+                if (!acc[k[0]]) acc[k[0]] = {};
+                acc[k[0]][k[1]] = value;
+                return acc;
+            }, {})),
+        };
+        return middleware;
+    }),
+    rxjs.withLatestFrom(getAdminConfig().pipe(formObjToJSON$())),
+    rxjs.map(([middleware, config]) => ({...config, middleware})),
+    rxjs.withLatestFrom(getConfig()),
+    rxjs.map(([config, { connections }]) => ({ ...config, connections })),
     rxjs.tap((a) => console.log("SAVING", a)),
 );
 
-const attributeMapForm = (selectedBackends) => ({
-    "attribute_mapping": {
-        "related_backend": {
-            "type": "text",
-            "datalist": ["s3", "webdav", "ftp", "sftp"],
-            "multi": true,
-            "autocomplete": false,
-        },
-        ...selectedBackends,
+const attributeMapForm = (selectedBackends, middlewares) => {
+    return {
+        "attribute_mapping": {
+            "related_backend": {
+                "type": "text",
+                "datalist": selectedBackends.map(({ label }) => label),
+                "multi": true,
+                "autocomplete": false,
+            },
+            // ...selectedBackends,
+        }
     }
-});
+};

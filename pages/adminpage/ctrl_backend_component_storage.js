@@ -5,7 +5,7 @@ import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
 
-import { init, getBackendAvailable, getBackendEnabled, addBackendEnabled, removeBackendEnabled } from "./ctrl_backend_state.js";
+import { initStorage, getBackendAvailable, getBackendEnabled, addBackendEnabled, removeBackendEnabled } from "./ctrl_backend_state.js";
 import { formObjToJSON$ } from "./helper_form.js";
 import { get as getAdminConfig, save as saveConfig } from "./model_config.js";
 
@@ -22,8 +22,7 @@ export default async function(render) {
         </div>
     `);
     render($page);
-
-    await init();
+    await initStorage();
 
     // feature: setup the buttons
     const init$ = getBackendAvailable().pipe(

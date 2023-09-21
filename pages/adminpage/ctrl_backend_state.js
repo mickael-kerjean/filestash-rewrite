@@ -1,11 +1,13 @@
 import rxjs from "../../lib/rx.js";
 import { get as getConfig } from "../../model/config.js";
+import { get as getAdminConfig } from "./model_config.js";
+import { formObjToJSON$ } from "./helper_form.js";
 
 export { getBackends as getBackendAvailable } from "./model_backend.js";
 
 const backendsEnabled$ = new rxjs.BehaviorSubject([]);
 
-export async function init() {
+export async function initStorage() {
     return await getConfig().pipe(
         rxjs.map(({ connections }) => connections),
         rxjs.tap((connections) => backendsEnabled$.next(connections)),
@@ -43,6 +45,14 @@ export function removeBackendEnabled(labelToRemove) {
 }
 
 const middlewareEnabled$ = new rxjs.BehaviorSubject(null);
+
+export async function initMiddleware() {
+    return await getAdminConfig().pipe(
+        rxjs.map(({ middleware }) => middleware),
+        formObjToJSON$(),
+        rxjs.tap(({ identity_provider }) => middlewareEnabled$.next(identity_provider.type)),
+    ).toPromise();
+}
 
 export { getAuthMiddleware as getMiddlewareAvailable } from "./model_auth_middleware.js";
 
