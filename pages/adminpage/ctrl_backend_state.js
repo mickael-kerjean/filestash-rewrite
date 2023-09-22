@@ -51,6 +51,7 @@ export async function initMiddleware() {
         rxjs.map(({ middleware }) => middleware),
         formObjToJSON$(),
         rxjs.tap(({ identity_provider }) => middlewareEnabled$.next(identity_provider.type)),
+        rxjs.first(),
     ).toPromise();
 }
 

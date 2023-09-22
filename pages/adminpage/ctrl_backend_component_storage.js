@@ -27,7 +27,9 @@ export default async function(render) {
     // feature: setup the buttons
     const init$ = getBackendAvailable().pipe(
         rxjs.tap(() => qs($page, `[data-bind="backend-available"]`).innerHTML = ""),
-        rxjs.mergeMap((specs) => Promise.all(Object.keys(specs).map((label) => createElement(`<div is="box-item" data-label="${label}"></div>`)))),
+        rxjs.mergeMap((specs) => Promise.all(Object.keys(specs).map((label) => createElement(`
+            <div is="box-item" data-label="${label}"></div>
+        `)))),
         applyMutations(qs($page, `[data-bind="backend-available"]`), "appendChild"),
         rxjs.share(),
     );

@@ -1,6 +1,6 @@
 import { createElement } from "../../lib/skeleton/index.js";
 import rxjs, { effect, applyMutation, applyMutations, onClick } from "../../lib/rx.js";
-import { createForm } from "../../lib/form.js";
+import { createForm, mutateForm } from "../../lib/form.js";
 import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
@@ -65,16 +65,23 @@ export default async function(render) {
         saveMiddleware,
     ));
 
-    // feature: setup forms.
+    // feature: setup forms
     // We put everything in the DOM so we don't lose transient state when clicking around
     const setupForm$ = getMiddlewareAvailable().pipe(
-        rxjs.withLatestFrom(getMiddlewareEnabled().pipe()),
-        rxjs.mergeMap(async ([available, { identity_provider, attribute_mapping }]) => {
+        rxjs.withLatestFrom(getAdminConfig().pipe(
+            rxjs.map((cfg) => ({
+                type: cfg?.middleware?.identity_provider?.type?.value,
+                params: JSON.parse(cfg?.middleware?.identity_provider?.params?.value),
+            })),
+        )),
+        rxjs.mergeMap(async ([availableSpecs, idpState = {}]) => {
+            const { type, params } = idpState;
             const idps = []
-            for (let key in available) {
-                const tmpl = available[key];
-                delete tmpl.type;
-                const $idp = await createForm({ [key]: tmpl }, formTmpl({
+            for (let key in availableSpecs) {
+                let idpSpec = availableSpecs[key];
+                delete idpSpec.type;
+                if (key === type) idpSpec = mutateForm(idpSpec, params)
+                const $idp = await createForm({ [key]: idpSpec }, formTmpl({
                     renderLeaf,
                     autocomplete: false,
                 }));
@@ -89,7 +96,7 @@ export default async function(render) {
     );
     effect(setupForm$);
 
-    // feature: handle visibility of the idp form to match the currently selected backend
+    // feature: handle visibility of the identity_provider form to match the selected midleware
     effect(setupForm$.pipe(
         rxjs.mergeMap(() => getMiddlewareEnabled()),
         rxjs.tap((currentMiddleware) => {
@@ -123,7 +130,7 @@ export default async function(render) {
         rxjs.mergeMap(() => getBackendEnabled().pipe(rxjs.withLatestFrom(
             getMiddlewareEnabled()
         ))),
-        rxjs.mergeMap(async ([backends, middlewares]) => await createForm(attributeMapForm(backends, middlewares), formTmpl({}))),
+        rxjs.mergeMap(async ([backendSpecs, middlewares]) => await createForm(attributeMapForm(backendSpecs, middlewares), formTmpl({}))),
         applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
     ));
 
@@ -140,7 +147,7 @@ export default async function(render) {
             rxjs.fromEvent(qs($page, `[name="attribute_mapping.related_backend"]`), "input").pipe(
                 rxjs.map((e) => e.target.value),
             ),
-            rxjs.of(qs($page, `[name="attribute_mapping.related_backend"]`).value), // TODO: not triggered, probably should get from source
+            // rxjs.of(qs($page, `[name="attribute_mapping.related_backend"]`).value), // TODO: not triggered, probably should get from source
         )),
         rxjs.map((value) => value.split(",").map((val) => val.trim()).filter((t) => !!t)),
         rxjs.withLatestFrom(getBackendEnabled()),
@@ -236,7 +243,7 @@ const saveMiddleware = rxjs.pipe(
     rxjs.map(([middleware, config]) => ({...config, middleware})),
     rxjs.withLatestFrom(getConfig()),
     rxjs.map(([config, { connections }]) => ({ ...config, connections })),
-    rxjs.tap((a) => console.log("SAVING", a)),
+    saveConfig(),
 );
 
 const attributeMapForm = (selectedBackends, middlewares) => {

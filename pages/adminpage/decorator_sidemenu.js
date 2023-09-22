@@ -12,10 +12,9 @@ import "../../components/icon.js";
 
 export default function(ctrl) {
     return async function(render) {
-        const css = await CSS(import.meta.url, "decorator_sidemenu.css", "index.css");
         const $page = createElement(`
             <div class="component_page_admin">
-                <style>${css}</style>
+                <style>${await CSS(import.meta.url, "decorator_sidemenu.css", "index.css")}</style>
                 <div class="component_menu_sidebar no-select">
                     <a class="header" href="/">
                         <svg class="arrow_left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
