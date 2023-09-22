@@ -67,7 +67,7 @@ export default async function(render) {
 
     // feature: setup forms
     // We put everything in the DOM so we don't lose transient state when clicking around
-    const setupForm$ = getMiddlewareAvailable().pipe(
+    const setupIDPForm$ = getMiddlewareAvailable().pipe(
         rxjs.withLatestFrom(getAdminConfig().pipe(
             rxjs.map((cfg) => ({
                 type: cfg?.middleware?.identity_provider?.type?.value,
@@ -94,10 +94,10 @@ export default async function(render) {
         applyMutations(qs($page, `[data-bind="idp"]`), "appendChild"),
         rxjs.share(),
     );
-    effect(setupForm$);
+    effect(setupIDPForm$);
 
     // feature: handle visibility of the identity_provider form to match the selected midleware
-    effect(setupForm$.pipe(
+    effect(setupIDPForm$.pipe(
         rxjs.mergeMap(() => getMiddlewareEnabled()),
         rxjs.tap((currentMiddleware) => {
             qsa($page, `[data-bind="idp"] .formbuilder`).forEach(($node) => {
@@ -125,39 +125,64 @@ export default async function(render) {
     ));
 
     // feature: setup the attribute mapping form
-    effect(init$.pipe(
-        rxjs.first(),
-        rxjs.mergeMap(() => getBackendEnabled().pipe(rxjs.withLatestFrom(
-            getMiddlewareEnabled()
-        ))),
-        rxjs.mergeMap(async ([backendSpecs, middlewares]) => await createForm(attributeMapForm(backendSpecs, middlewares), formTmpl({}))),
+    const setupAMForm$ = init$.pipe(
+        rxjs.mapTo({
+            "attribute_mapping": {
+                "related_backend": {
+                    "type": "text",
+                    "datalist": [],
+                    "multi": true,
+                    "autocomplete": false,
+                    "value": "",
+                },
+            }
+        }),
+        // related_backend value
+        rxjs.withLatestFrom(getAdminConfig().pipe(
+            rxjs.first(),
+            rxjs.map((cfg) => cfg?.middleware?.attribute_mapping?.related_backend?.value),
+        )),
+        rxjs.map(([spec, state]) => {
+            // spec.attribute_mapping.related_backend.value = state;
+            spec.attribute_mapping.related_backend.value = "network1"; // TODO: use state instead
+            return spec;
+        }),
+        // related_backend completion
+        rxjs.withLatestFrom(getBackendEnabled().pipe(rxjs.first())),
+        rxjs.map(([spec, backends]) => {
+            spec.attribute_mapping.related_backend.datalist = backends.map(({ label }) => label);
+            return spec;
+        }),
+        // TODO: setup backends
+        rxjs.mergeMap(async (specs) => await createForm(specs, formTmpl({}))),
         applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
-    ));
+        rxjs.share(),
+    );
+    effect(setupAMForm$);
 
-    // feature: setup autocompletion of related backend field
-    effect(getBackendEnabled().pipe(
-        rxjs.map((backends) => backends.map(({ label }) => label)),
-        // rxjs.tap((a) => console.log("enabled", a))
-        // TODO: setup autocomplete based on labels
-    ));
+    // // feature: setup autocompletion of related backend field: TODO ideally this would merge with the setup
+    // effect(getBackendEnabled().pipe(
+    //     rxjs.map((backends) => backends.map(({ label }) => label)),
+    //     // rxjs.tap((a) => console.log("enabled", a))
+    //     // TODO: setup autocomplete based on labels
+    // ));
 
     // feature: related backend values triggers creation/deletion of related backends
-    effect(setupForm$.pipe(
+    effect(setupAMForm$.pipe(
         rxjs.mergeMap(() => rxjs.merge(
             rxjs.fromEvent(qs($page, `[name="attribute_mapping.related_backend"]`), "input").pipe(
                 rxjs.map((e) => e.target.value),
             ),
-            // rxjs.of(qs($page, `[name="attribute_mapping.related_backend"]`).value), // TODO: not triggered, probably should get from source
+            rxjs.of(qs($page, `[name="attribute_mapping.related_backend"]`).value),
         )),
         rxjs.map((value) => value.split(",").map((val) => val.trim()).filter((t) => !!t)),
-        rxjs.withLatestFrom(getBackendEnabled()),
+        rxjs.withLatestFrom(getBackendEnabled().pipe(rxjs.first())),
         rxjs.map(([inputBackends, enabledBackends]) =>
             inputBackends
                 .map((label) => enabledBackends.find((b) => b.label === label))
                 .filter((label) => !!label)
         ),
-        // rxjs.map((backends) => backends.map((type) => ({type, label: type}))),
-        rxjs.withLatestFrom(getBackendAvailable()),
+        rxjs.withLatestFrom(getBackendAvailable().pipe(rxjs.first())),
         rxjs.map(([backends, formSpec]) => {
             let spec = {};
             backends.forEach(({ label, type }) => {
@@ -194,7 +219,7 @@ export default async function(render) {
     ));
 
     // feature: form input change handler
-    effect(setupForm$.pipe(
+    effect(setupAMForm$.pipe(
         rxjs.switchMap(() => rxjs.fromEvent($page, "input")),
         rxjs.mergeMap(() => getMiddlewareEnabled().pipe(rxjs.first())),
         saveMiddleware,
@@ -245,17 +270,3 @@ const saveMiddleware = rxjs.pipe(
     rxjs.map(([config, { connections }]) => ({ ...config, connections })),
     saveConfig(),
 );
-
-const attributeMapForm = (selectedBackends, middlewares) => {
-    return {
-        "attribute_mapping": {
-            "related_backend": {
-                "type": "text",
-                "datalist": selectedBackends.map(({ label }) => label),
-                "multi": true,
-                "autocomplete": false,
-            },
-            // ...selectedBackends,
-        }
-    }
-};
