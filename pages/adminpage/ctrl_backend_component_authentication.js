@@ -188,6 +188,7 @@ export default async function(render) {
         rxjs.map(([backends, formSpec]) => {
             let spec = {};
             // STEP1: format the backends spec
+            // TODO: put this logic in the getBackendAvailable() section
             backends.forEach(({ label, type }) => {
                 if (formSpec[type]) {
                     spec[label] = formSpec[type];
@@ -201,15 +202,16 @@ export default async function(render) {
                     }
                 }
             });
-            // STEP2: setup initial values
-            for(const [key, value] of new FormData(qs($page, `[data-bind="attribute-mapping"]`)).entries()) {
-                const path = key.split(".");
-                let ptr = spec;
-                for (let i=0; i<path.length; i++) {
-                    if (ptr) ptr = ptr[path[i]];
-                }
-                if (ptr) ptr.value = value;
-            }
+            // // STEP2: setup initial values
+            // for(const [key, value] of new FormData(qs($page, `[data-bind="attribute-mapping"]`)).entries()) {
+            //     const path = key.split(".");
+            //     let ptr = spec;
+            //     for (let i=0; i<path.length; i++) {
+            //         if (ptr) ptr = ptr[path[i]];
+            //     }
+            //     if (ptr) ptr.value = value;
+            // }
+            // console.log(spec)
             delete spec["related_backend"];
             return spec
         }),
@@ -229,10 +231,6 @@ export default async function(render) {
             }),
         )),
         rxjs.map(([formSpec, formState]) => mutateForm(formSpec, formState)),
-        rxjs.tap((a) => console.log(a)),
-        // rxjs.tap(([formSpec, formState]) => console.log(formSpec, formState, mutateForm(formSpec, formState))),
-        // rxjs.map(([formSpec, formState]) => formSpec),
-        // TODO: mutateFor?m
         rxjs.mergeMap(async (formSpec) => await createForm(formSpec, formTmpl({
             renderLeaf: () => createElement(`<label></label>`),
         }))),
