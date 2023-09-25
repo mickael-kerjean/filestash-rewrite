@@ -34,7 +34,7 @@ export default function(render) {
     // feature2: form change
     effect(setup$.pipe(
         useForm$(() => qsa($form, `[name]`)),
-        rxjs.withLatestFrom(getAdminConfig()),
+        rxjs.combineLatestWith(getAdminConfig().pipe(rxjs.first())),
         rxjs.map(([formState, formSpec]) => {
             const fstate = Object.fromEntries(Object.entries(formState).map(([key, value]) => ([
                 key.replace(new RegExp("^params\."), "log."),
@@ -43,7 +43,7 @@ export default function(render) {
             return mutateForm(formSpec, fstate);
         }),
         formObjToJSON$(),
-        rxjs.withLatestFrom(getConfig()),
+        rxjs.combineLatestWith(getConfig().pipe(rxjs.first())),
         rxjs.map(([adminConfig, publicConfig]) => {
             adminConfig["connections"] = publicConfig["connections"];
             return adminConfig;

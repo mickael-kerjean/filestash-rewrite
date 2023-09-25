@@ -1,5 +1,6 @@
 import { createElement } from "../../lib/skeleton/index.js";
 import rxjs, { effect, applyMutation, applyMutations, onClick } from "../../lib/rx.js";
+import ajax from "../../lib/ajax.js";
 import { createForm, mutateForm } from "../../lib/form.js";
 import { qs, qsa } from "../../lib/dom.js";
 import { formTmpl } from "../../components/form.js";
@@ -48,7 +49,7 @@ export default async function(render) {
 
     // feature: state of buttons
     effect(init$.pipe(
-        rxjs.mergeMap(() => getMiddlewareEnabled()),
+        rxjs.concatMap(() => getMiddlewareEnabled()),
         rxjs.filter((backend) => !!backend),
         rxjs.tap((backend) => qsa($page, `[is="box-item"]`).forEach(($button) => {
             $button.getAttribute("data-label") === backend ?
@@ -68,13 +69,14 @@ export default async function(render) {
     // feature: setup forms
     // We put everything in the DOM so we don't lose transient state when clicking around
     const setupIDPForm$ = getMiddlewareAvailable().pipe(
-        rxjs.withLatestFrom(getAdminConfig().pipe(
+        rxjs.combineLatestWith(getAdminConfig().pipe(
+            rxjs.first(),
             rxjs.map((cfg) => ({
                 type: cfg?.middleware?.identity_provider?.type?.value,
                 params: JSON.parse(cfg?.middleware?.identity_provider?.params?.value),
             })),
         )),
-        rxjs.mergeMap(async ([availableSpecs, idpState = {}]) => {
+        rxjs.concatMap(async ([availableSpecs, idpState = {}]) => {
             const { type, params } = idpState;
             const idps = []
             for (let key in availableSpecs) {
@@ -98,7 +100,7 @@ export default async function(render) {
 
     // feature: handle visibility of the identity_provider form to match the selected midleware
     effect(setupIDPForm$.pipe(
-        rxjs.mergeMap(() => getMiddlewareEnabled()),
+        rxjs.concatMap(() => getMiddlewareEnabled()),
         rxjs.tap((currentMiddleware) => {
             qsa($page, `[data-bind="idp"] .formbuilder`).forEach(($node) => {
                 $node.getAttribute("id") === currentMiddleware ?
@@ -135,26 +137,26 @@ export default async function(render) {
                     "autocomplete": false,
                     "value": "",
                 },
+                // dynamic form here is generated reactively from the value of the "related_backend" field
             }
         }),
         // related_backend value
-        rxjs.withLatestFrom(getAdminConfig().pipe(
+        rxjs.combineLatestWith(getAdminConfig().pipe(
             rxjs.first(),
             rxjs.map((cfg) => cfg?.middleware?.attribute_mapping?.related_backend?.value),
         )),
         rxjs.map(([spec, state]) => {
-            // spec.attribute_mapping.related_backend.value = state;
-            spec.attribute_mapping.related_backend.value = "network1"; // TODO: use state instead
+            spec.attribute_mapping.related_backend.value = state;
+            // spec.attribute_mapping.related_backend.value = "network1"; // TODO: use state instead
             return spec;
         }),
         // related_backend completion
-        rxjs.withLatestFrom(getBackendEnabled().pipe(rxjs.first())),
+        rxjs.combineLatestWith(getBackendEnabled().pipe(rxjs.first())),
         rxjs.map(([spec, backends]) => {
             spec.attribute_mapping.related_backend.datalist = backends.map(({ label }) => label);
             return spec;
         }),
-        // TODO: setup backends
-        rxjs.mergeMap(async (specs) => await createForm(specs, formTmpl({}))),
+        rxjs.concatMap(async (specs) => await createForm(specs, formTmpl({}))),
         applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
         rxjs.share(),
     );
@@ -176,24 +178,30 @@ export default async function(render) {
             rxjs.of(qs($page, `[name="attribute_mapping.related_backend"]`).value),
         )),
         rxjs.map((value) => value.split(",").map((val) => val.trim()).filter((t) => !!t)),
-        rxjs.withLatestFrom(getBackendEnabled().pipe(rxjs.first())),
+        rxjs.combineLatestWith(getBackendEnabled().pipe(rxjs.first())),
         rxjs.map(([inputBackends, enabledBackends]) =>
             inputBackends
                 .map((label) => enabledBackends.find((b) => b.label === label))
                 .filter((label) => !!label)
         ),
-        rxjs.withLatestFrom(getBackendAvailable().pipe(rxjs.first())),
+        rxjs.combineLatestWith(getBackendAvailable()),
         rxjs.map(([backends, formSpec]) => {
             let spec = {};
+            // STEP1: format the backends spec
             backends.forEach(({ label, type }) => {
                 if (formSpec[type]) {
                     spec[label] = formSpec[type];
-                    delete spec[label]["advanced"];
                     for (let key in spec[label]) {
-                        delete spec[label][key]["id"];
+                        if (spec[label][key]["type"] === "enable") { // remove enable toggle to get everything visible
+                            delete spec[label][key];
+                            break;
+                        } else if (spec[label][key]["id"]) { // remove toggle markers as we want to show everything
+                            delete spec[label][key]["id"];
+                        }
                     }
                 }
             });
+            // STEP2: setup initial values
             for(const [key, value] of new FormData(qs($page, `[data-bind="attribute-mapping"]`)).entries()) {
                 const path = key.split(".");
                 let ptr = spec;
@@ -205,6 +213,26 @@ export default async function(render) {
             delete spec["related_backend"];
             return spec
         }),
+        rxjs.combineLatestWith(getAdminConfig().pipe(
+            rxjs.first(),
+            rxjs.map((cfg) => JSON.parse(cfg?.middleware?.attribute_mapping?.params?.value)),
+            rxjs.map((cfg) => {
+                // transform the form state from legacy format (= an object struct which was replicating the spec object)
+                // to the new format which leverage the dom (= or the input name attribute to be precise) to store the entire schema
+                let obj = {};
+                for (let key1 in cfg) {
+                    for (let key2 in cfg[key1]) {
+                        obj[`${key1}.${key2}`] = cfg[key1][key2];
+                    }
+                }
+                return obj;
+            }),
+        )),
+        rxjs.map(([formSpec, formState]) => mutateForm(formSpec, formState)),
+        rxjs.tap((a) => console.log(a)),
+        // rxjs.tap(([formSpec, formState]) => console.log(formSpec, formState, mutateForm(formSpec, formState))),
+        // rxjs.map(([formSpec, formState]) => formSpec),
+        // TODO: mutateFor?m
         rxjs.mergeMap(async (formSpec) => await createForm(formSpec, formTmpl({
             renderLeaf: () => createElement(`<label></label>`),
         }))),
@@ -258,15 +286,15 @@ const saveMiddleware = rxjs.pipe(
                 const k = key.split(".");
                 if (k.length !== 2) return acc;
                 if (!acc[k[0]]) acc[k[0]] = {};
-                acc[k[0]][k[1]] = value;
+                if (value !== "") acc[k[0]][k[1]] = value;
                 return acc;
             }, {})),
         };
         return middleware;
     }),
-    rxjs.withLatestFrom(getAdminConfig().pipe(formObjToJSON$())),
+    rxjs.combineLatestWith(getAdminConfig().pipe(formObjToJSON$(), rxjs.first())),
     rxjs.map(([middleware, config]) => ({...config, middleware})),
-    rxjs.withLatestFrom(getConfig()),
+    rxjs.combineLatestWith(getConfig().pipe(rxjs.first())),
     rxjs.map(([config, { connections }]) => ({ ...config, connections })),
     saveConfig(),
 );

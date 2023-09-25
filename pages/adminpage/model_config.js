@@ -27,12 +27,12 @@ export function save() {
         rxjs.tap(() => isSaving$.next(true)),
         rxjs.debounceTime(1000),
         rxjs.tap((a) => console.log("SAVING", a)),
-        // rxjs.mergeMap((formData) => ajax({
-        //     url: "/admin/api/config",
-        //     method: "POST",
-        //     responseType: "json",
-        //     body: formData,
-        // })),
+        rxjs.mergeMap((formData) => ajax({
+            url: "/admin/api/config",
+            method: "POST",
+            responseType: "json",
+            body: formData,
+        })),
         rxjs.tap(() => isSaving$.next(false)),
     );
 }

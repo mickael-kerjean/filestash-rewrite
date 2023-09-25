@@ -68,7 +68,7 @@ function componentStep1(render) {
         preventDefault(),
         rxjs.mapTo(["name", "loading"]), applyMutation(qs($page, "component-icon"), "setAttribute"),
         rxjs.map(() => qs($page, "input").value),
-        rxjs.withLatestFrom(getAdminConfig()),
+        rxjs.combineLatestWith(getAdminConfig().pipe(rxjs.first())),
         rxjs.map(([pwd, config]) => {
             config["auth"]["admin"]["value"] = bcrypt.hashSync(pwd);
             return config;
@@ -83,7 +83,7 @@ function componentStep1(render) {
 
 const reshapeConfigBeforeSave = rxjs.pipe(
     formObjToJSON$(),
-    rxjs.withLatestFrom(getConfig()),
+    rxjs.combineLatestWith(getConfig().pipe(rxjs.first())),
     rxjs.map(([config, publicConfig]) => {
         config["connections"] = publicConfig["connections"];
         return config;
