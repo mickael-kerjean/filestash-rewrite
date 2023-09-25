@@ -184,25 +184,31 @@ export default async function(render) {
                 .map((label) => enabledBackends.find((b) => b.label === label))
                 .filter((label) => !!label)
         ),
-        rxjs.combineLatestWith(getBackendAvailable()),
+        rxjs.combineLatestWith(getBackendAvailable().pipe(rxjs.map((specs) => {
+            // we don't want to show the "normal" form but a flat version of it
+            // so we're getting rid of anything that could make some magic happen like toggle and
+            // ids which enable those interactions
+            for (let key in specs) {
+                for (let input in specs[key]) {
+                    if (specs[key][input]["type"] === "enable") {
+                        delete specs[key][input];
+                    } else if ("id" in specs[key][input]) {
+                        delete specs[key][input]["id"];
+                    }
+                }
+            }
+            return specs;
+        }))),
         rxjs.map(([backends, formSpec]) => {
             let spec = {};
             // STEP1: format the backends spec
-            // TODO: put this logic in the getBackendAvailable() section
             backends.forEach(({ label, type }) => {
                 if (formSpec[type]) {
                     spec[label] = formSpec[type];
-                    for (let key in spec[label]) {
-                        if (spec[label][key]["type"] === "enable") { // remove enable toggle to get everything visible
-                            delete spec[label][key];
-                            break;
-                        } else if (spec[label][key]["id"]) { // remove toggle markers as we want to show everything
-                            delete spec[label][key]["id"];
-                        }
-                    }
                 }
             });
-            // // STEP2: setup initial values
+            // console.log(spec);
+            // // STEP2: setup initial values // TODO: delete this?
             // for(const [key, value] of new FormData(qs($page, `[data-bind="attribute-mapping"]`)).entries()) {
             //     const path = key.split(".");
             //     let ptr = spec;
@@ -211,8 +217,7 @@ export default async function(render) {
             //     }
             //     if (ptr) ptr.value = value;
             // }
-            // console.log(spec)
-            delete spec["related_backend"];
+            // delete spec["related_backend"];
             return spec
         }),
         rxjs.combineLatestWith(getAdminConfig().pipe(
@@ -231,6 +236,7 @@ export default async function(render) {
             }),
         )),
         rxjs.map(([formSpec, formState]) => mutateForm(formSpec, formState)),
+        // rxjs.map(([formSpec, formState]) => formSpec),
         rxjs.mergeMap(async (formSpec) => await createForm(formSpec, formTmpl({
             renderLeaf: () => createElement(`<label></label>`),
         }))),
