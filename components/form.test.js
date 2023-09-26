@@ -31,19 +31,14 @@ describe("form input", () => {
 });
 
 describe("multi select with a input text and datalist", () => {
-    it("simplest use case", () => {
+    it("base use case", () => {
         expect(multicomplete("", ["test", "bar"])).toStrictEqual(["test", "bar"]);
-
     });
 
-    xit("smartcomplete", () => {
-        expect(smartcomplete("test", ["testfoo", "testbar", "something"])).toBe([
-            "test",
-            "testfoo",
-            "testbar",
-            "test, testfoo",
-            "test, testbar",
-            "test, something",
-        ]);
+    it("with autocompletion", () => {
+        expect(multicomplete("foo", ["test", "bar"])).toStrictEqual(["foo, test", "foo, bar"]);
+        expect(multicomplete("test", ["test", "bar"])).toStrictEqual(["test, bar"]);
+        expect(multicomplete("foo, test", ["test", "bar"])).toStrictEqual(["foo, test, bar"]);
+        expect(multicomplete("foo, test, bar", ["test", "bar"])).toStrictEqual([]);
     });
-})
+});

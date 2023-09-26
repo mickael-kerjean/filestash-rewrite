@@ -86,7 +86,7 @@ function $renderInput(options = {}) {
             $datalist.setAttribute("id", dataListId);
             $wrapper.appendChild($input);
             $wrapper.appendChild($datalist);
-            (datalist || []).forEach((value) => {
+            (props.multi ? multicomplete(value, datalist) : (datalist || [])).forEach((value) => {
                 $datalist.appendChild(createElement(`<option value="${value}"/>`))
             });
             if (!props.multi) return $wrapper;
@@ -250,6 +250,7 @@ export function format(name) {
 };
 
 export function multicomplete(input, datalist) {
+    input = input.trim().replace(/,$/g, "");
     const current = input.split(",").map((val) => val.trim()).filter((t) => !!t);
     const diff = datalist.filter((x) => current.indexOf(x) === -1);
     return diff.map((candidate) => input.length === 0 ? candidate : `${input}, ${candidate}`);
