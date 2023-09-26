@@ -66,8 +66,8 @@ export default async function(render) {
         saveMiddleware,
     ));
 
-    // feature: setup forms
-    // We put everything in the DOM so we don't lose transient state when clicking around
+    // feature: setup forms - we insert everything in the DOM so we don't lose
+    // transient state when clicking around
     const setupIDPForm$ = getMiddlewareAvailable().pipe(
         rxjs.combineLatestWith(getAdminConfig().pipe(
             rxjs.first(),
@@ -147,7 +147,6 @@ export default async function(render) {
         )),
         rxjs.map(([spec, state]) => {
             spec.attribute_mapping.related_backend.value = state;
-            // spec.attribute_mapping.related_backend.value = "network1"; // TODO: use state instead
             return spec;
         }),
         // related_backend completion
@@ -201,23 +200,9 @@ export default async function(render) {
         }))),
         rxjs.map(([backends, formSpec]) => {
             let spec = {};
-            // STEP1: format the backends spec
             backends.forEach(({ label, type }) => {
-                if (formSpec[type]) {
-                    spec[label] = formSpec[type];
-                }
+                if (formSpec[type]) spec[label] = JSON.parse(JSON.stringify(formSpec[type]));
             });
-            // console.log(spec);
-            // // STEP2: setup initial values // TODO: delete this?
-            // for(const [key, value] of new FormData(qs($page, `[data-bind="attribute-mapping"]`)).entries()) {
-            //     const path = key.split(".");
-            //     let ptr = spec;
-            //     for (let i=0; i<path.length; i++) {
-            //         if (ptr) ptr = ptr[path[i]];
-            //     }
-            //     if (ptr) ptr.value = value;
-            // }
-            // delete spec["related_backend"];
             return spec
         }),
         rxjs.combineLatestWith(getAdminConfig().pipe(
@@ -236,7 +221,6 @@ export default async function(render) {
             }),
         )),
         rxjs.map(([formSpec, formState]) => mutateForm(formSpec, formState)),
-        // rxjs.map(([formSpec, formState]) => formSpec),
         rxjs.mergeMap(async (formSpec) => await createForm(formSpec, formTmpl({
             renderLeaf: () => createElement(`<label></label>`),
         }))),
