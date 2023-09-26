@@ -25,8 +25,7 @@ export function get() {
 export function save() {
     return rxjs.pipe(
         rxjs.tap(() => isSaving$.next(true)),
-        rxjs.debounceTime(1000),
-        rxjs.tap((a) => console.log("SAVING", a)),
+        rxjs.debounceTime(1500),
         rxjs.mergeMap((formData) => ajax({
             url: "/admin/api/config",
             method: "POST",
