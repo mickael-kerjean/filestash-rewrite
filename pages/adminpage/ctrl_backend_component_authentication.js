@@ -183,7 +183,7 @@ export default async function(render) {
                 .map((label) => enabledBackends.find((b) => b.label === label))
                 .filter((label) => !!label)
         ),
-        rxjs.combineLatestWith(getBackendAvailable().pipe(rxjs.map((specs) => {
+        rxjs.combineLatestWith(getBackendAvailable().pipe(rxjs.first(), rxjs.map((specs) => {
             // we don't want to show the "normal" form but a flat version of it
             // so we're getting rid of anything that could make some magic happen like toggle and
             // ids which enable those interactions
