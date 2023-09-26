@@ -76,6 +76,7 @@ function $renderInput(options = {}) {
             const $input = createElement(`
                 <input ${attr}
                     list="${dataListId}"
+                    datalist="${datalist.join(",")}"
                     type="text"
                     value="${safe(value)}"
                     class="component_input"
@@ -90,14 +91,20 @@ function $renderInput(options = {}) {
                 $datalist.appendChild(createElement(`<option value="${value}"/>`))
             });
             if (!props.multi) return $wrapper;
+            $input.refresh = () => {
+                const _datalist = $input.getAttribute("datalist").split(",");
+                multicomplete($input.value, _datalist).forEach((value) => {
+                    $datalist.appendChild(createElement(`<option value="${value}"/>`));
+                });
+            };
             $input.oninput = (e) => {
                 for (const $option of $datalist.children) {
                     $option.remove();
                 }
-                multicomplete(e.target.value, datalist).forEach((value) => {
-                    $datalist.appendChild(createElement(`<option value="${value}"/>`));
-                });
+                $input.refresh();
             };
+
+            // TODO: react on change of datalist
             return $wrapper;
         case "enable":
             return createElement(`

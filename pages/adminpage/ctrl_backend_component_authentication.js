@@ -149,24 +149,22 @@ export default async function(render) {
             spec.attribute_mapping.related_backend.value = state;
             return spec;
         }),
-        // related_backend completion
-        rxjs.combineLatestWith(getBackendEnabled().pipe(rxjs.first())),
-        rxjs.map(([spec, backends]) => {
-            spec.attribute_mapping.related_backend.datalist = backends.map(({ label }) => label);
-            return spec;
-        }),
         rxjs.concatMap(async (specs) => await createForm(specs, formTmpl({}))),
         applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
         rxjs.share(),
     );
     effect(setupAMForm$);
 
-    // // feature: setup autocompletion of related backend field: TODO ideally this would merge with the setup
-    // effect(getBackendEnabled().pipe(
-    //     rxjs.map((backends) => backends.map(({ label }) => label)),
-    //     // rxjs.tap((a) => console.log("enabled", a))
-    //     // TODO: setup autocomplete based on labels
-    // ));
+    // feature: setup autocompletion of related backend field
+    effect(setupAMForm$.pipe(
+        rxjs.mergeMap(() => getBackendEnabled()),
+        rxjs.map((backends) => backends.map(({ label }) => label)),
+        rxjs.tap((datalist) => {
+            const $input = $page.querySelector(`[name="attribute_mapping.related_backend"]`);
+            $input.setAttribute("datalist", datalist.join(","));
+            $input.refresh();
+        }),
+    ));
 
     // feature: related backend values triggers creation/deletion of related backends
     effect(setupAMForm$.pipe(
