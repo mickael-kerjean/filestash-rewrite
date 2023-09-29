@@ -103,8 +103,6 @@ function $renderInput(options = {}) {
                 }
                 $input.refresh();
             };
-
-            // TODO: react on change of datalist
             return $wrapper;
         case "enable":
             return createElement(`
@@ -152,7 +150,7 @@ function $renderInput(options = {}) {
             // TODO
         case "long_text":
             return createElement(`
-                <textarea ${attr} class="component_textarea" rows="8"></textarea>
+                <textarea ${attr} class="component_textarea" rows="8">${safe(value || props.default)}</textarea>
             `);
         case "bcrypt": // TODO
             return createElement(`

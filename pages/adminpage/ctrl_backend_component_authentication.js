@@ -8,7 +8,7 @@ import { generateSkeleton } from "../../components/skeleton.js";
 import { get as getConfig } from "../../model/config.js";
 
 import {
-    initMiddleware,
+    initMiddleware, initStorage,
     getMiddlewareAvailable, getMiddlewareEnabled, toggleMiddleware,
     getBackendAvailable, getBackendEnabled,
 } from "./ctrl_backend_state.js";
@@ -32,6 +32,7 @@ export default async function(render) {
     `);
     render($page);
     await initMiddleware();
+    await initStorage();
 
     // feature: setup the buttons
     const init$ = getMiddlewareAvailable().pipe(
@@ -82,7 +83,7 @@ export default async function(render) {
             for (let key in availableSpecs) {
                 let idpSpec = availableSpecs[key];
                 delete idpSpec.type;
-                if (key === type) idpSpec = mutateForm(idpSpec, params)
+                if (key === type) idpSpec = mutateForm(idpSpec, params);
                 const $idp = await createForm({ [key]: idpSpec }, formTmpl({
                     renderLeaf,
                     autocomplete: false,

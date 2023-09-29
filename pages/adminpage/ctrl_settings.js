@@ -24,6 +24,7 @@ export default AdminHOC(function(render) {
     render(transition($container));
 
     const config$ = getAdminConfig().pipe(
+        rxjs.first(),
         reshapeConfigBeforeDisplay,
     );
 
