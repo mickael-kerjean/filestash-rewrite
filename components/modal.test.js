@@ -13,7 +13,7 @@ describe("component::modal", () => {
     });
     it("external API", () => {
         const modal = require("./modal.js").default;
-        expect(typeof modal.alert).toBe("function");
+        expect(typeof modal.open).toBe("function");
     });
 
     it("is an web component", async () => {
@@ -23,7 +23,7 @@ describe("component::modal", () => {
                 <component-modal></component-modal>
             </div>
         `;
-        await modal.alert(document.createElement("div"), {});
+        await modal.open(document.createElement("div"), {});
         await nextTick()
         expect(document.body).toMatchSnapshot();
     });
@@ -32,7 +32,7 @@ describe("component::modal", () => {
         const modal = require("./modal.js").default;
         document.body.innerHTML = `<div></div>`;
         expect(() => {
-            modal.alert(document.createElement("div"), {});
+            modal.open(document.createElement("div"), {});
         }).toThrow();
     });
 });

@@ -10,7 +10,6 @@ jest.mock("../../helpers/loader.js");
 describe("admin::ctrl_login", () => {
     beforeEach(() => {
         jest.clearAllMocks();
-        authenticate$.mockImplementation(() => rxjs.pipe());
         CSS.mockImplementation(() => Promise.resolve(""));
     });
     it("renders a form", async () => {
@@ -42,7 +41,7 @@ describe("admin::ctrl_login", () => {
         // given
         let formData = null;
         let $page = null;
-        authenticate$.mockImplementation(() => rxjs.pipe(
+        authenticate$.mockImplementation((body) => rxjs.of(body).pipe(
             rxjs.tap((_formData) => formData = _formData)
         ));
         await ctrl(($node) => $page = $node);

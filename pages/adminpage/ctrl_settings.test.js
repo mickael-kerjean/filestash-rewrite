@@ -1,48 +1,53 @@
 import rxjs from "../../lib/rx.js";
-import ctrl from "./ctrl_settings.js";
-import { get, save } from "./model_config.js";
+import { get as getAdminConfig, save as saveAdminConfig } from "./model_config.js";
+import { get as getConfig } from "../../model/config.js";
 
 jest.mock("./decorator.js", () => ({
     __esModule: true,
     default: (ctrl) => (render) => ctrl(render),
 }));
 jest.mock("./model_config.js");
+jest.mock("../../model/config.js");
 
 describe("admin::ctrl_settings", () => {
     beforeEach(() => {
-        get.mockImplementation(() => rxjs.of(CONFIG_API_FIXTURE));
-        save.mockImplementation(() => rxjs.pipe());
+        getConfig.mockImplementation(() => rxjs.of({})),
+        getAdminConfig.mockImplementation(() => rxjs.of(CONFIG_API_FIXTURE));
+        saveAdminConfig.mockImplementation(() => rxjs.pipe());
+    });
+
+    afterEach(() => {
         jest.clearAllMocks();
     });
 
-    xit("render the page", async () => {
+    it("render the page", async () => {
         // given
         let $page = null;
         const render = ($node) => $page = $node;
         const saveRequest = jest.fn();
-        save.mockImplementation(() => rxjs.tap(() => saveRequest()));
+        saveAdminConfig.mockImplementation(() => rxjs.tap(() => saveRequest()));
 
         // when
-        ctrl(render);
+        require("./ctrl_settings.js").default(render);
         await nextTick();
 
         // then
         expect($page).toBeTruthy();
         expect($page.classList.contains("component_settingspage")).toBe(true);
         expect($page.querySelectorAll("input").length).toBeGreaterThan(10);
-        expect(get).toHaveBeenCalledTimes(1);
+        expect(getAdminConfig).toHaveBeenCalled();
         expect(saveRequest).toHaveBeenCalledTimes(0);
     });
 
-    xit("fill up the form will autosave", async () => {
+    it("fill up the form will autosave", async () => {
         // given
         let $page = null;
         const render = ($node) => $page = $node;
         const saveRequest = jest.fn();
-        save.mockImplementation(() => rxjs.tap(() => saveRequest()));
+        saveAdminConfig.mockImplementation(() => rxjs.tap(() => saveRequest()));
 
         // when
-        ctrl(render);
+        require("./ctrl_settings.js").default(render);
         await nextTick();
         $page.querySelectorAll(`input[type="text"]`).forEach(($input, i) => {
             $input.value = "value " + i;
@@ -58,13 +63,13 @@ describe("admin::ctrl_settings", () => {
         expect(saveRequest).not.toHaveBeenCalledTimes(0);
     });
 
-    xit("snapshot", async () => {
+    it("snapshot", async () => {
         // given
         let $page = null;
         const render = ($node) => $page = $node;
 
         // when
-        ctrl(render);
+        require("./ctrl_settings.js").default(render);
         await nextTick();
 
         // then

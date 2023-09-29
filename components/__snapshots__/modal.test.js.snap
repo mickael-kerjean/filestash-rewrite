@@ -48,12 +48,8 @@ exports[`component::modal is an web component 1`] = `
             >
               
                     
-              <button
-                class="emphasis"
-                type="submit"
-              >
-                OK
-              </button>
+              
+                    
               
                 
             </div>

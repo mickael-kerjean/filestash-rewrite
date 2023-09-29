@@ -44,12 +44,15 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
-                    filestash\\""=""
                     name="general.name"
-                    placeholder="Default: \\"
+                    placeholder="Default: "Filestash""
+                    spellcheck="off"
                     type="text"
-                    value="MartelloRe"
+                    value="value 0"
                   />
                 </div>
                 
@@ -107,9 +110,13 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="general.port"
                     placeholder="Default: 8334"
+                    spellcheck="off"
                     type="number"
                     value=""
                   />
@@ -169,12 +176,15 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
-                    demo.filestash.app\\""=""
                     name="general.host"
-                    placeholder="Eg: \\"
+                    placeholder="Eg: "demo.filestash.app""
+                    spellcheck="off"
                     type="text"
-                    value=""
+                    value="value 1"
                   />
                 </div>
                 
@@ -235,20 +245,24 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="formbuilder_password"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       class="component_input"
                       name="general.secret_key"
+                      spellcheck="off"
                       type="password"
                       value="toJEcwv3uq3HezSI"
                     />
                     
-                        
+                    
                     <component-icon
                       name="eye"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -309,18 +323,22 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="component_checkbox"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       name="general.force_ssl"
+                      spellcheck="off"
                       type="checkbox"
                     />
                     
-                        
+                    
                     <span
                       class="indicator"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -378,30 +396,50 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <select
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_select"
                     name="general.editor"
+                    spellcheck="off"
+                    value="base"
                   >
                     
-                        
+                    
+                    
                     <option
                       name="base"
+                      selected=""
                     >
-                      base
+                      
+                        base
+                    
                     </option>
-                    ,
+                    
+                ,
+                    
                     <option
+                      false=""
                       name="emacs"
                     >
-                      emacs
+                      
+                        emacs
+                    
                     </option>
-                    ,
+                    
+                ,
+                    
                     <option
+                      false=""
                       name="vim"
                     >
-                      vim
+                      
+                        vim
+                    
                     </option>
                     
-                    
+                
+                
                   </select>
                 </div>
                 
@@ -462,19 +500,23 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="component_checkbox"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       checked=""
                       name="general.fork_button"
+                      spellcheck="off"
                       type="checkbox"
                     />
                     
-                        
+                    
                     <span
                       class="indicator"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -532,10 +574,14 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="general.logout"
+                    spellcheck="off"
                     type="text"
-                    value=""
+                    value="value 2"
                   />
                 </div>
                 
@@ -596,18 +642,22 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="component_checkbox"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       name="general.display_hidden"
+                      spellcheck="off"
                       type="checkbox"
                     />
                     
-                        
+                    
                     <span
                       class="indicator"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -668,19 +718,23 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="component_checkbox"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       checked=""
                       name="general.refresh_after_upload"
+                      spellcheck="off"
                       type="checkbox"
                     />
                     
-                        
+                    
                     <span
                       class="indicator"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -741,18 +795,22 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="component_checkbox"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       name="general.upload_button"
+                      spellcheck="off"
                       type="checkbox"
                     />
                     
-                        
+                    
                     <span
                       class="indicator"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -810,10 +868,14 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="general.upload_pool_size"
+                    spellcheck="off"
                     type="number"
-                    value="15"
+                    value=""
                   />
                 </div>
                 
@@ -871,24 +933,39 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <select
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_select"
                     name="general.filepage_default_view"
+                    spellcheck="off"
+                    value="grid"
                   >
                     
-                        
+                    
+                    
                     <option
+                      false=""
                       name="list"
                     >
-                      list
+                      
+                        list
+                    
                     </option>
-                    ,
+                    
+                ,
+                    
                     <option
                       name="grid"
+                      selected=""
                     >
-                      grid
+                      
+                        grid
+                    
                     </option>
                     
-                    
+                
+                
                   </select>
                 </div>
                 
@@ -946,30 +1023,50 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <select
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_select"
                     name="general.filepage_default_sort"
+                    spellcheck="off"
+                    value="type"
                   >
                     
-                        
+                    
+                    
                     <option
                       name="type"
+                      selected=""
                     >
-                      type
+                      
+                        type
+                    
                     </option>
-                    ,
+                    
+                ,
+                    
                     <option
+                      false=""
                       name="date"
                     >
-                      date
+                      
+                        date
+                    
                     </option>
-                    ,
+                    
+                ,
+                    
                     <option
+                      false=""
                       name="name"
                     >
-                      name
+                      
+                        name
+                    
                     </option>
                     
-                    
+                
+                
                   </select>
                 </div>
                 
@@ -1027,8 +1124,12 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="general.cookie_timeout"
+                    spellcheck="off"
                     type="number"
                     value=""
                   />
@@ -1088,12 +1189,14 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <textarea
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_textarea"
                     name="general.custom_css"
                     rows="8"
-                  >
-                                        
-                  </textarea>
+                    spellcheck="off"
+                  />
                 </div>
                 
             
@@ -1179,19 +1282,22 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="component_checkbox"
                       >
                         
-                        
+                    
                         <input
-                          checked=""
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           name="features.api.enable"
+                          spellcheck="off"
                           type="checkbox"
                         />
                         
-                        
+                    
                         <span
                           class="indicator"
                         />
                         
-                    
+                
                       </div>
                     </div>
                     
@@ -1249,13 +1355,15 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                       style="width:100%;"
                     >
                       <textarea
+                        autocapitalize="off"
+                        autocomplete="off"
+                        autocorrect="off"
                         class="component_textarea"
                         name="features.api.api_key"
                         placeholder="foobar *.filestash.app"
                         rows="8"
-                      >
-                                            
-                      </textarea>
+                        spellcheck="off"
+                      />
                     </div>
                     
             
@@ -1328,19 +1436,23 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="component_checkbox"
                       >
                         
-                        
+                    
                         <input
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           checked=""
                           name="features.share.enable"
+                          spellcheck="off"
                           type="checkbox"
                         />
                         
-                        
+                    
                         <span
                           class="indicator"
                         />
                         
-                    
+                
                       </div>
                     </div>
                     
@@ -1398,24 +1510,39 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                       style="width:100%;"
                     >
                       <select
+                        autocapitalize="off"
+                        autocomplete="off"
+                        autocorrect="off"
                         class="component_select"
                         name="features.share.default_access"
+                        spellcheck="off"
+                        value="viewer"
                       >
                         
-                        
+                    
+                    
                         <option
+                          false=""
                           name="editor"
                         >
-                          editor
-                        </option>
-                        ,
-                        <option
-                          name="viewer"
-                        >
-                          viewer
+                          
+                        editor
+                    
                         </option>
                         
+                ,
                     
+                        <option
+                          name="viewer"
+                          selected=""
+                        >
+                          
+                        viewer
+                    
+                        </option>
+                        
+                
+                
                       </select>
                     </div>
                     
@@ -1474,7 +1601,7 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     >
                       <input
                         class="component_input"
-                        path="features.share.redirect"
+                        name="features.share.redirect"
                         readonly=""
                         type="text"
                         value="unknown element type string"
@@ -1548,10 +1675,14 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                       style="width:100%;"
                     >
                       <input
+                        autocapitalize="off"
+                        autocomplete="off"
+                        autocorrect="off"
                         class="component_input"
                         name="features.protection.iframe"
+                        spellcheck="off"
                         type="text"
-                        value=""
+                        value="value 4"
                       />
                     </div>
                     
@@ -1612,19 +1743,22 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="component_checkbox"
                       >
                         
-                        
+                    
                         <input
-                          checked=""
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           name="features.protection.enable_chromecast"
+                          spellcheck="off"
                           type="checkbox"
                         />
                         
-                        
+                    
                         <span
                           class="indicator"
                         />
                         
-                    
+                
                       </div>
                     </div>
                     
@@ -1682,9 +1816,13 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                       style="width:100%;"
                     >
                       <input
+                        autocapitalize="off"
+                        autocomplete="off"
+                        autocorrect="off"
                         class="component_input"
                         name="features.protection.zip_timeout"
                         placeholder="Default: 60seconds"
+                        spellcheck="off"
                         type="number"
                         value=""
                       />
@@ -1744,9 +1882,13 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                       style="width:100%;"
                     >
                       <input
+                        autocapitalize="off"
+                        autocomplete="off"
+                        autocorrect="off"
                         class="component_input"
                         name="features.protection.ls_timeout"
                         placeholder="Default: 2"
+                        spellcheck="off"
                         type="number"
                         value=""
                       />
@@ -1809,20 +1951,24 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="component_checkbox"
                       >
                         
-                        
+                    
                         <input
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           checked=""
                           name="features.protection.enable"
                           placeholder="Default: true"
+                          spellcheck="off"
                           type="checkbox"
                         />
                         
-                        
+                    
                         <span
                           class="indicator"
                         />
                         
-                    
+                
                       </div>
                     </div>
                     
@@ -1883,20 +2029,24 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="component_checkbox"
                       >
                         
-                        
+                    
                         <input
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           checked=""
                           name="features.protection.disable_svg"
                           placeholder="Default: true"
+                          spellcheck="off"
                           type="checkbox"
                         />
                         
-                        
+                    
                         <span
                           class="indicator"
                         />
                         
-                    
+                
                       </div>
                     </div>
                     
@@ -1970,18 +2120,23 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="component_checkbox"
                       >
                         
-                        
+                    
                         <input
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           checked=""
+                          name="features.office.enable"
+                          spellcheck="off"
                           type="checkbox"
                         />
                         
-                        
+                    
                         <span
                           classname="indicator"
                         />
                         
-                    
+                
                       </div>
                     </div>
                     
@@ -2043,12 +2198,16 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         style="width:100%;"
                       >
                         <input
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           class="component_input"
                           id="onlyoffice_server"
-                          name="features.office.enable"
+                          name="features.office.onlyoffice_server"
                           placeholder="Eg: http://127.0.0.1:8080"
+                          spellcheck="off"
                           type="text"
-                          value=""
+                          value="value 5"
                         />
                       </div>
                       
@@ -2109,20 +2268,23 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                           class="component_checkbox"
                         >
                           
-                        
+                    
                           <input
-                            checked=""
+                            autocapitalize="off"
+                            autocomplete="off"
+                            autocorrect="off"
                             id="onlyoffice_can_download"
-                            name="features.office.enable"
+                            name="features.office.can_download"
+                            spellcheck="off"
                             type="checkbox"
                           />
                           
-                        
+                    
                           <span
                             class="indicator"
                           />
                           
-                    
+                
                         </div>
                       </div>
                       
@@ -2197,19 +2359,23 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="component_checkbox"
                       >
                         
-                        
+                    
                         <input
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           name="features.server.console_enable"
                           placeholder="Default: false"
+                          spellcheck="off"
                           type="checkbox"
                         />
                         
-                        
+                    
                         <span
                           class="indicator"
                         />
                         
-                    
+                
                       </div>
                     </div>
                     
@@ -2280,9 +2446,13 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                       style="width:100%;"
                     >
                       <input
+                        autocapitalize="off"
+                        autocomplete="off"
+                        autocorrect="off"
                         class="component_input"
                         name="features.search.explore_timeout"
                         placeholder="Default: 1500ms"
+                        spellcheck="off"
                         type="number"
                         value=""
                       />
@@ -2311,7 +2481,8 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="description"
                       >
                         When full text search is disabled, the search engine recursively explore
- directories to find results. Exploration can't last longer than what is configured here
+                        <br />
+                         directories to find results. Exploration can't last longer than what is configured here
                       </div>
                       
                 
@@ -2359,18 +2530,23 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         class="component_checkbox"
                       >
                         
-                        
+                    
                         <input
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           checked=""
+                          name="features.video.enable_transcoder"
+                          spellcheck="off"
                           type="checkbox"
                         />
                         
-                        
+                    
                         <span
                           classname="indicator"
                         />
                         
-                    
+                
                       </div>
                     </div>
                     
@@ -2432,11 +2608,15 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                         style="width:100%;"
                       >
                         <input
+                          autocapitalize="off"
+                          autocomplete="off"
+                          autocorrect="off"
                           class="component_input"
                           id="transcoding_blacklist_format"
-                          name="features.video.enable_transcoder"
+                          name="features.video.blacklist_format"
+                          spellcheck="off"
                           type="text"
-                          value=""
+                          value="value 6"
                         />
                       </div>
                       
@@ -2515,18 +2695,23 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="component_checkbox"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       checked=""
+                      name="log.enable"
+                      spellcheck="off"
                       type="checkbox"
                     />
                     
-                        
+                    
                     <span
                       classname="indicator"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -2586,37 +2771,62 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     style="width:100%;"
                   >
                     <select
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       class="component_select"
                       id="log_level"
-                      name="log.enable"
+                      name="log.level"
+                      spellcheck="off"
+                      value="DEBUG"
                     >
                       
-                        
+                    
+                    
                       <option
                         name="DEBUG"
+                        selected=""
                       >
+                        
                         DEBUG
-                      </option>
-                      ,
-                      <option
-                        name="INFO"
-                      >
-                        INFO
-                      </option>
-                      ,
-                      <option
-                        name="WARNING"
-                      >
-                        WARNING
-                      </option>
-                      ,
-                      <option
-                        name="ERROR"
-                      >
-                        ERROR
+                    
                       </option>
                       
+                ,
                     
+                      <option
+                        false=""
+                        name="INFO"
+                      >
+                        
+                        INFO
+                    
+                      </option>
+                      
+                ,
+                    
+                      <option
+                        false=""
+                        name="WARNING"
+                      >
+                        
+                        WARNING
+                    
+                      </option>
+                      
+                ,
+                    
+                      <option
+                        false=""
+                        name="ERROR"
+                      >
+                        
+                        ERROR
+                    
+                      </option>
+                      
+                
+                
                     </select>
                   </div>
                   
@@ -2678,18 +2888,22 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="component_checkbox"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       name="log.telemetry"
+                      spellcheck="off"
                       type="checkbox"
                     />
                     
-                        
+                    
                     <span
                       class="indicator"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -2762,11 +2976,15 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="email.server"
                     placeholder="Default: smtp.gmail.com"
+                    spellcheck="off"
                     type="text"
-                    value="smtp"
+                    value="value 7"
                   />
                 </div>
                 
@@ -2824,11 +3042,15 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="email.port"
                     placeholder="Default: 587"
+                    spellcheck="off"
                     type="number"
-                    value="3456"
+                    value=""
                   />
                 </div>
                 
@@ -2886,11 +3108,15 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="email.username"
                     placeholder="Eg: username@gmail.com"
+                    spellcheck="off"
                     type="text"
-                    value="username"
+                    value="value 8"
                   />
                 </div>
                 
@@ -2951,21 +3177,25 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                     class="formbuilder_password"
                   >
                     
-                        
+                    
                     <input
+                      autocapitalize="off"
+                      autocomplete="off"
+                      autocorrect="off"
                       class="component_input"
                       name="email.password"
                       placeholder="Eg: Your google password"
+                      spellcheck="off"
                       type="password"
                       value="klklk"
                     />
                     
-                        
+                    
                     <component-icon
                       name="eye"
                     />
                     
-                    
+                
                   </div>
                 </div>
                 
@@ -3023,11 +3253,15 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="email.from"
                     placeholder="Eg: username@gmail.com"
+                    spellcheck="off"
                     type="text"
-                    value="jean@gmail.com"
+                    value="value 9"
                   />
                 </div>
                 
@@ -3100,9 +3334,13 @@ exports[`admin::ctrl_settings snapshot 1`] = `
                   style="width:100%;"
                 >
                   <input
+                    autocapitalize="off"
+                    autocomplete="off"
+                    autocorrect="off"
                     class="component_input"
                     name="auth.admin"
                     readonly=""
+                    spellcheck="off"
                     type="password"
                     value="$2a$05$ps0.vh3sRzgvvKCsX2N.MO.bk6lMmN7MgRycXLm1KsHyR6PPNiV22"
                   />

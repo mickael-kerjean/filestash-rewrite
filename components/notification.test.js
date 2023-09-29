@@ -11,6 +11,7 @@ describe("component::notification", () => {
         document.body.innerHTML = "";
         global.customElements = { define: jest.fn() };
     });
+
     it("external API", () => {
         const notification = require("./notification.js").default;
         expect(typeof notification.info).toBe("function");
