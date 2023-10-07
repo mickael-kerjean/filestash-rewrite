@@ -3,6 +3,7 @@ import rxjs, { effect, stateMutation, applyMutation } from "../../lib/rx.js";
 import { qs, qsa } from "../../lib/dom.js";
 import { createForm } from "../../lib/form.js";
 import { formTmpl } from "../../components/form.js";
+import { generateSkeleton } from "../../components/skeleton.js";
 
 import { useForm$ } from "./helper_form.js";
 import { get as getAudit, setLoader } from "./model_audit.js";
@@ -10,7 +11,9 @@ import { get as getAudit, setLoader } from "./model_audit.js";
 export default function(render) {
     const $page = createElement(`
         <div>
-            <form></form>
+            <form>
+                ${generateSkeleton(10)}
+            </form>
             <div data-bind="auditor"></div>
         </div>
     `);
