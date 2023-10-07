@@ -149,9 +149,11 @@ function $renderInput(options = {}) {
         case "long_password":
             // TODO
         case "long_text":
-            return createElement(`
-                <textarea ${attr} class="component_textarea" rows="8">${safe(value || props.default)}</textarea>
+            const $textarea = createElement(`
+                <textarea ${attr} class="component_textarea" rows="8" placeholder="${safe(props.default)}"></textarea>
             `);
+            if (value) $textarea.value = value;
+            return $textarea;
         case "bcrypt": // TODO
             return createElement(`
                 <input

@@ -125,10 +125,13 @@ export default async function(render) {
 }
 
 const saveConnections = rxjs.pipe(
-    rxjs.combineLatestWith(getAdminConfig().pipe(formObjToJSON$(), rxjs.first())),
-    rxjs.map(([connections, config]) => ({
-        ...config,
-        connections,
-    })),
+    rxjs.mergeMap((connections) => getAdminConfig().pipe(
+        rxjs.first(),
+        formObjToJSON$(),
+        rxjs.map((config) => ({
+            ...config,
+            connections,
+        })),
+    )),
     saveConfig(),
 );

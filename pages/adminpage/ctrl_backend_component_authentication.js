@@ -36,13 +36,14 @@ export default async function(render) {
 
     // feature: setup the buttons
     const init$ = getMiddlewareAvailable().pipe(
+        rxjs.first(),
+        rxjs.map((specs) => Object.keys(specs).map((label) => createElement(`
+            <div is="box-item" data-label="${label}"></div>
+        `))),
         rxjs.tap(() => {
             qs($page, "h2").classList.remove("hidden");
             qs($page, `.box-container`).innerHTML = "";
         }),
-        rxjs.map((specs) => Object.keys(specs).map((label) => createElement(`
-            <div is="box-item" data-label="${label}"></div>
-        `))),
         applyMutations(qs($page, ".box-container"), "appendChild"),
         rxjs.share(),
     );
@@ -142,14 +143,13 @@ export default async function(render) {
             }
         }),
         // related_backend value
-        rxjs.combineLatestWith(getAdminConfig().pipe(
+        rxjs.mergeMap((spec) => getAdminConfig().pipe(
             rxjs.first(),
-            rxjs.map((cfg) => cfg?.middleware?.attribute_mapping?.related_backend?.value),
+            rxjs.map((cfg) => {
+                spec.attribute_mapping.related_backend.value = cfg?.middleware?.attribute_mapping?.related_backend?.value;
+                return spec;
+            }),
         )),
-        rxjs.map(([spec, state]) => {
-            spec.attribute_mapping.related_backend.value = state;
-            return spec;
-        }),
         rxjs.concatMap(async (specs) => await createForm(specs, formTmpl({}))),
         applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
         rxjs.share(),
@@ -158,7 +158,7 @@ export default async function(render) {
 
     // feature: setup autocompletion of related backend field
     effect(setupAMForm$.pipe(
-        rxjs.mergeMap(() => getBackendEnabled()),
+        rxjs.switchMap(() => getBackendEnabled()),
         rxjs.map((backends) => backends.map(({ label }) => label)),
         rxjs.tap((datalist) => {
             const $input = $page.querySelector(`[name="attribute_mapping.related_backend"]`);
@@ -169,20 +169,20 @@ export default async function(render) {
 
     // feature: related backend values triggers creation/deletion of related backends
     effect(setupAMForm$.pipe(
-        rxjs.mergeMap(() => rxjs.merge(
+        rxjs.switchMap(() => rxjs.merge(
+            getBackendEnabled().pipe(rxjs.map(() => qs($page, `[name="attribute_mapping.related_backend"]`).value)),
             rxjs.fromEvent(qs($page, `[name="attribute_mapping.related_backend"]`), "input").pipe(
                 rxjs.map((e) => e.target.value),
             ),
-            rxjs.of(qs($page, `[name="attribute_mapping.related_backend"]`).value),
         )),
         rxjs.map((value) => value.split(",").map((val) => val.trim()).filter((t) => !!t)),
-        rxjs.combineLatestWith(getBackendEnabled().pipe(rxjs.first())),
-        rxjs.map(([inputBackends, enabledBackends]) =>
-            inputBackends
-                .map((label) => enabledBackends.find((b) => b.label === label))
-                .filter((label) => !!label)
-        ),
-        rxjs.combineLatestWith(getBackendAvailable().pipe(rxjs.first(), rxjs.map((specs) => {
+        rxjs.mergeMap((inputBackends) => getBackendEnabled().pipe(
+            rxjs.first(),
+            rxjs.map((enabledBackends) => inputBackends
+                     .map((label) => enabledBackends.find((b) => b.label === label))
+                     .filter((label) => !!label)),
+        )),
+        rxjs.mergeMap((backends) => getBackendAvailable().pipe(rxjs.first(), rxjs.map((specs) => {
             // we don't want to show the "normal" form but a flat version of it
             // so we're getting rid of anything that could make some magic happen like toggle and
             // ids which enable those interactions
@@ -195,7 +195,7 @@ export default async function(render) {
                     }
                 }
             }
-            return specs;
+            return [backends, specs];
         }))),
         rxjs.map(([backends, formSpec]) => {
             let spec = {};
@@ -204,19 +204,19 @@ export default async function(render) {
             });
             return spec
         }),
-        rxjs.combineLatestWith(getAdminConfig().pipe(
+        rxjs.mergeMap((spec) => getAdminConfig().pipe(
             rxjs.first(),
             rxjs.map((cfg) => JSON.parse(cfg?.middleware?.attribute_mapping?.params?.value)),
             rxjs.map((cfg) => {
                 // transform the form state from legacy format (= an object struct which was replicating the spec object)
                 // to the new format which leverage the dom (= or the input name attribute to be precise) to store the entire schema
-                let obj = {};
+                let state = {};
                 for (let key1 in cfg) {
                     for (let key2 in cfg[key1]) {
-                        obj[`${key1}.${key2}`] = cfg[key1][key2];
+                        state[`${key1}.${key2}`] = cfg[key1][key2];
                     }
                 }
-                return obj;
+                return [spec, state];
             }),
         )),
         rxjs.map(([formSpec, formState]) => mutateForm(formSpec, formState)),
@@ -279,9 +279,15 @@ const saveMiddleware = rxjs.pipe(
         };
         return middleware;
     }),
-    rxjs.combineLatestWith(getAdminConfig().pipe(formObjToJSON$(), rxjs.first())),
+    rxjs.mergeMap((middleware) => getAdminConfig().pipe(
+        rxjs.first(),
+        formObjToJSON$(),
+        rxjs.map((config) => [middleware, config]),
+    )),
     rxjs.map(([middleware, config]) => ({...config, middleware})),
-    rxjs.combineLatestWith(getConfig().pipe(rxjs.first())),
-    rxjs.map(([config, { connections }]) => ({ ...config, connections })),
+    rxjs.mergeMap((newConfig) => getConfig().pipe(
+        rxjs.first(),
+        rxjs.map(({ connections }) => ({ ...newConfig, connections })),
+    )),
     saveConfig(),
 );
