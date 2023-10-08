@@ -154,7 +154,7 @@ function $renderInput(options = {}) {
             `);
             if (value) $textarea.value = value;
             return $textarea;
-        case "bcrypt": // TODO
+        case "bcrypt":
             return createElement(`
                 <input
                     type="password"

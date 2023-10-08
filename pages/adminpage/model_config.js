@@ -14,6 +14,10 @@ const config$ = isSaving$.pipe(
     rxjs.shareReplay(1),
 )
 
+export async function initConfig() {
+    if (isSaving$.value === true) isSaving$.next(false);
+}
+
 export function isSaving() {
     return isSaving$.asObservable();
 }
@@ -31,7 +35,6 @@ export function save() {
             method: "POST",
             responseType: "json",
             body: formData,
-        })),
-        rxjs.tap(() => isSaving$.next(false)),
+        }).pipe(rxjs.tap(() => isSaving$.next(false)))),
     );
 }
