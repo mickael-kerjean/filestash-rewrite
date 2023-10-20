@@ -3,6 +3,7 @@ import { JSDOM } from "jsdom";
 
 global.jest = jest;
 global.window = new JSDOM("<html></html>", { url: "http://example.com" }).window;
+global.window.env = "test";
 global.document = global.window.document;
 global.nextTick = () => new Promise((done) => process.nextTick(done));
 global.location = global.window.location;
