@@ -25,9 +25,7 @@
         ],
         "module": "es2022",
         "target": "es2022",
-        "typeRoots": [
-            "types/app.d.ts"
-        ]
+        "typeRoots": []
     },
     "input": ["pages/ctrl_boot.d.ts", "pages/*.js"],
     "exclude": [
