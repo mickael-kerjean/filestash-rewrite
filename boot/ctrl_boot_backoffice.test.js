@@ -1,4 +1,5 @@
 import exec from "./ctrl_boot_backoffice.js";
+jest.mock("../pages/adminpage/model_release.js");
 
 describe("ctrl::boot", () => {
     it("runs", async() => {
