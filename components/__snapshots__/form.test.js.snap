@@ -1,5 +1,154 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`form input other types 1`] = `
+<input
+  class="component_input"
+  name="foo.bar"
+  type="text"
+/>
+`;
+
+exports[`form input other types 2`] = `
+<div
+  class="component_checkbox"
+>
+  
+                    
+  <input
+    name="foo.bar"
+    type="checkbox"
+  />
+  
+                    
+  <span
+    classname="indicator"
+  />
+  
+                
+</div>
+`;
+
+exports[`form input other types 3`] = `
+<input
+  class="component_input"
+  name="foo.bar"
+  type="number"
+/>
+`;
+
+exports[`form input other types 4`] = `
+<div
+  class="formbuilder_password"
+>
+  
+                    
+  <input
+    class="component_input"
+    name="foo.bar"
+    type="password"
+  />
+  
+                    
+  <component-icon
+    name="eye"
+  />
+  
+                
+</div>
+`;
+
+exports[`form input other types 5`] = `
+<textarea
+  class="component_textarea"
+  name="foo.bar"
+  rows="8"
+/>
+`;
+
+exports[`form input other types 6`] = `
+<input
+  class="component_input"
+  name="foo.bar"
+  readonly=""
+  type="password"
+/>
+`;
+
+exports[`form input other types 7`] = `
+<input
+  name="foo.bar"
+  type="hidden"
+/>
+`;
+
+exports[`form input other types 8`] = `
+<div
+  class="component_checkbox"
+>
+  
+                    
+  <input
+    name="foo.bar"
+    type="checkbox"
+  />
+  
+                    
+  <span
+    class="indicator"
+  />
+  
+                
+</div>
+`;
+
+exports[`form input other types 9`] = `
+<select
+  class="component_select"
+  name="foo.bar"
+/>
+`;
+
+exports[`form input other types 10`] = `
+<input
+  class="component_input"
+  name="foo.bar"
+  type="date"
+/>
+`;
+
+exports[`form input other types 11`] = `
+<input
+  class="component_input"
+  name="foo.bar"
+  type="datetime-local"
+/>
+`;
+
+exports[`form input other types 12`] = `
+<img
+  id="null"
+  src="null"
+/>
+`;
+
+exports[`form input other types 13`] = `
+<input
+  class="component_input"
+  readonly=""
+  type="password"
+/>
+`;
+
+exports[`form input other types 14`] = `
+<input
+  class="component_input"
+  name="foo.bar"
+  readonly=""
+  type="text"
+  value="unknown element type unknown"
+/>
+`;
+
 exports[`form input text input - with properties 1`] = `
 <input
   class="component_input"
@@ -10,12 +159,8 @@ exports[`form input text input - with properties 1`] = `
 
 exports[`form input text input 1`] = `
 <input
-  autocapitalize="off"
-  autocomplete="off"
-  autocorrect="off"
   class="component_input"
   name="general.host"
-  spellcheck="off"
   type="text"
 />
 `;

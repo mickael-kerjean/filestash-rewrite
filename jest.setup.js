@@ -6,6 +6,7 @@ global.window = new JSDOM("<html></html>", { url: "http://example.com" }).window
 global.document = global.window.document;
 global.nextTick = () => new Promise((done) => process.nextTick(done));
 global.location = global.window.location;
+global.XMLHttpRequest = global.window.XMLHttpRequest;
 global.createRender = function() {
     const fn = jest.fn();
     fn.get = (i = 0) => fn.mock.calls[i][0];

@@ -2,13 +2,13 @@ import rxjs from "../../lib/rx.js";
 import ajax from "../../lib/ajax.js";
 
 const log$ = ajax({
-    url: url(1024*100), // fetch the last 100kb by default
+    url: url(1024 * 100), // fetch the last 100kb by default
     responseType: "text",
 }).pipe(
     rxjs.map(({ response }) => response),
 );
 
-export function url(logSize = null) {
+export function url(logSize = 0) {
     return "/admin/api/logs" + (logSize ? `?maxSize=${logSize}` : "");
 }
 

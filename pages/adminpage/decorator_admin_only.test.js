@@ -1,5 +1,6 @@
 import hoc from "./decorator_admin_only.js";
 import rxjs from "../../lib/rx.js";
+import { AjaxError } from "../../lib/error.js";
 import { isAdmin$ } from "./model_admin_session.js";
 import ctrlLogin from "./ctrl_login.js";
 import ctrlError from "../ctrl_error.js";
@@ -45,17 +46,22 @@ describe("admin::middleware::admin_only", () => {
         expect(render.mock.calls[0][0]).toBe("LOGIN");
     });
 
-    it("shows an error page when the api call fails", () => {
-        // given
-        isAdmin$.mockImplementation(() => rxjs.throwError(new Error("Oops")));
-        const render = jest.fn();
-        const ctrl = hoc((r) => r("OK"));
+    it("shows an error page when the api call fails", async () => {
+        await Promise.all([
+            new Error("Oops"),
+            new AjaxError("Oops", new Error("Oops"), "INTERNAL_SERVER_ERROR"),
+        ].map(async (err) => {
+            // given
+            isAdmin$.mockImplementation(() => rxjs.throwError(err));
+            const render = jest.fn();
+            const ctrl = hoc((r) => r("OK"));
 
-        // when
-        ctrl(render);
+            // when
+            await ctrl(render);
 
-        // then
-        expect(render).toBeCalledTimes(1);
-        expect(render.mock.calls[0][0] instanceof Error).toBe(true);
+            // then
+            expect(render).toBeCalledTimes(1);
+            expect(render.mock.calls[0][0] instanceof Error).toBe(true);
+        }));
     });
 });

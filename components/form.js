@@ -1,6 +1,6 @@
 import { createElement } from "../lib/skeleton/index.js";
-import { safe } from "../lib/dom.js";
 import { gid } from "../lib/random.js";
+import { ApplicationError } from "../lib/error.js";
 
 import "./icon.js";
 
@@ -40,7 +40,7 @@ export function formTmpl(options = {}) {
     };
 };
 
-function $renderInput(options = {}) {
+export function $renderInput(options = {}) {
     const { autocomplete } = options;
 
     return function(props) {
@@ -56,188 +56,235 @@ function $renderInput(options = {}) {
             options = null
         } = props;
 
-        let attr = `name="${path.join(".")}" `;
-        if (id) attr += `id="${safe(id)}" `;
-        if (placeholder) attr += `placeholder="${safe(placeholder)}" `;
-        if (!autocomplete || props.autocomplete === false) attr += "autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"off\" ";
-        if (required) attr += "required ";
-        if (readonly) attr += "readonly ";
+        const attrs = [];
+        attrs.push(($node) => $node.setAttribute("name", path.join(".")));
+        if (id) attrs.push(($node) => $node.setAttribute("id", id));
+        if (placeholder) attrs.push(($node) => $node.setAttribute("placeholder", placeholder));
+        if (!autocomplete || props.autocomplete === false) attrs.push(($node) => {
+            $node.setAttribute("autocomplete", "off");
+            $node.setAttribute("autocorrect", "off");
+            $node.setAttribute("autocapitalize", "off");
+            $node.setAttribute("spellcheck", "off");
+        });
+        if (required) attrs.push(($node) => $node.setAttribute("required", ""));
+        if (readonly) attrs.push(($node) => $node.setAttribute("readonly", ""));
 
         switch (type) {
-        case "text":
-            if (!datalist) return createElement(`
-                <input ${attr}
-                    type="text"
-                    value="${safe(value)}"
-                    class="component_input"
-                />
-            `);
-            const dataListId = gid("list_");
+        case "text": {
             const $input = createElement(`
-                <input ${attr}
-                    list="${dataListId}"
-                    datalist="${datalist.join(",")}"
+                <input
                     type="text"
-                    value="${safe(value)}"
                     class="component_input"
                 />
             `);
+            if (!($input instanceof window.HTMLInputElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $input.value = value;
+            attrs.map((setAttribute) => setAttribute($input));
+
+            if (!datalist) return $input;
+
+            const dataListId = gid("list_");
+            $input.setAttribute("list", dataListId);
+            $input.setAttribute("datalist", datalist.join(","));
+
             const $wrapper = document.createElement("span");
             const $datalist = document.createElement("datalist");
             $datalist.setAttribute("id", dataListId);
             $wrapper.appendChild($input);
             $wrapper.appendChild($datalist);
             (props.multi ? multicomplete(value, datalist) : (datalist || [])).forEach((value) => {
-                $datalist.appendChild(createElement(`<option value="${value}"/>`))
+                $datalist.appendChild(new Option(value));
             });
             if (!props.multi) return $wrapper;
+            // @ts-ignore
             $input.refresh = () => {
-                const _datalist = $input.getAttribute("datalist").split(",");
-                multicomplete($input.value, _datalist).forEach((value) => {
-                    $datalist.appendChild(createElement(`<option value="${value}"/>`));
+                const _datalist = $input?.getAttribute("datalist")?.split(",");
+                $datalist.innerHTML = "";
+                multicomplete($input.getAttribute("value"), _datalist).forEach((value) => {
+                    $datalist.appendChild(new Option(value));
                 });
             };
-            $input.oninput = (e) => {
+            $input.oninput = () => {
                 for (const $option of $datalist.children) {
                     $option.remove();
                 }
+                // @ts-ignore
                 $input.refresh();
             };
             return $wrapper;
-        case "enable":
-            return createElement(`
+        }
+        case "enable": {
+            const $div = createElement(`
                 <div class="component_checkbox">
                     <input
-                        ${attr}
                         type="checkbox"
                         ${(value === null ? props.default : value) ? "checked" : ""}
                     />
                     <span className="indicator"></span>
                 </div>
             `);
-        case "number":
-            return createElement(`
+            const $input = $div.querySelector("input");
+            attrs.map((setAttribute) => setAttribute($input));
+            return $div;
+        }
+        case "number": {
+            const $input = createElement(`
                 <input
-                    ${attr}
                     type="number"
-                    value="${safe(value)}"
                     class="component_input"
                 />
             `);
-        case "password":
-            const $node = createElement(`
+            if (!($input instanceof window.HTMLInputElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $input.value = value;
+            attrs.map((setAttribute) => setAttribute($input));
+            return $input;
+        }
+        case "password": {
+            const $div = createElement(`
                 <div class="formbuilder_password">
                     <input
-                        ${attr}
-                        value="${safe(value)}"
                         type="password"
                         class="component_input"
                     />
                     <component-icon name="eye"></component-icon>
                 </div>
             `);
-            const $icon = $node.querySelector("component-icon");
+            const $input = $div.querySelector("input");
+            if (!($input instanceof window.HTMLInputElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $input.value = value;
+            attrs.map((setAttribute) => setAttribute($input));
+
+            const $icon = $div.querySelector("component-icon");
             if ($icon instanceof window.HTMLElement) {
                 $icon.onclick = function(e) {
                     if (!(e.target instanceof window.HTMLElement)) return;
-                    const $input = e.target.parentElement.previousElementSibling;
+                    const $input = e.target?.parentElement?.previousElementSibling;
+                    if (!$input) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
                     if ($input.getAttribute("type") === "password") $input.setAttribute("type", "text");
                     else $input.setAttribute("type", "password");
                 };
             }
-            return $node;
-        case "long_password":
-            // TODO
-        case "long_text":
+            return $div;
+        }
+        case "long_text": {
             const $textarea = createElement(`
-                <textarea ${attr} class="component_textarea" rows="8" placeholder="${safe(props.default)}"></textarea>
+                <textarea
+                    class="component_textarea"
+                    rows="8"
+                ></textarea>
             `);
-            if (value) $textarea.value = value;
+            if (!($textarea instanceof window.HTMLTextAreaElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $textarea.value = value;
+            attrs.map((setAttribute) => setAttribute($textarea));
             return $textarea;
-        case "bcrypt":
-            return createElement(`
+        }
+        case "bcrypt": {
+            const $input = createElement(`
                 <input
                     type="password"
-                    ${attr}
-                    value="${safe(value)}"
-                    readonly
                     class="component_input"
+                    readonly
                 />
             `);
-        case "hidden":
-            return createElement(`
-                <input
-                    type="hidden"
-                    value=${safe(value)}
-                    name="${safe(path.join("."))}"
-                />
+            if (!($input instanceof window.HTMLInputElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $input.value = value;
+            attrs.map((setAttribute) => setAttribute($input));
+            return $input;
+        }
+        case "hidden": {
+            const $input = createElement(`
+                <input type="hidden" />
             `);
-        case "boolean":
-            return createElement(`
+            if (!($input instanceof window.HTMLInputElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $input.value = value;
+            $input.setAttribute("name", path.join("."));
+            return $input;
+        }
+        case "boolean": {
+            const $div = createElement(`
                 <div class="component_checkbox">
                     <input
-                        ${attr}
                         type="checkbox"
                         ${(value === null ? props.default : value) ? "checked" : ""}
                     />
                     <span class="indicator"></span>
                 </div>
             `);
-        case "select":
-            const renderOption = (name) => {
-                const optName = safe(name);
-                const formVal = safe(value || props.default);
-                return `
-                    <option
-                        name="${optName}"
-                        ${(optName === formVal) && "selected"}
-                    >
-                        ${optName}
-                    </option>
-                `;
-            }
-            return createElement(`
-                <select
-                    ${attr}
-                    value="${safe(value || props.default)}"
-                    class="component_select"
-                >
-                    ${(options || []).map(renderOption)}
-                </select>
+            const $input = $div.querySelector("input");
+            attrs.map((setAttribute) => setAttribute($input));
+            return $div;
+        }
+        case "select": {
+            const $select = createElement(`
+                <select class="component_select"></select>
             `);
-        case "date":
-            return createElement(`
+            if (!($select instanceof window.HTMLSelectElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $select.value = value || props.default;
+            attrs.map((setAttribute) => setAttribute($select));
+            (options || []).forEach((name) => {
+                const $option = createElement(`
+                    <option></option>
+                `);
+                $option.textContent = name;
+                $option.setAttribute("name", name);
+                if (name === (value || props.default)) {
+                    $option.setAttribute("selected", "");
+                }
+                $select.appendChild($option);
+            });
+            return $select;
+        }
+        case "date": {
+            const $input = createElement(`
                 <input
-                    ${attr}
-                    value="${safe(value || props.default)}"
                     type="date"
                     class="component_input"
                 />
             `);
-        case "datetime":
-            return createElement(`
+            if (!($input instanceof window.HTMLInputElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $input.value = value;
+            attrs.map((setAttribute) => setAttribute($input));
+            return $input;
+        }
+        case "datetime": {
+            const $input = createElement(`
                 <input
-                    ${attr}
-                    value="${safe(value || props.default)}"
                     type="datetime-local"
                     class="component_input"
                 />
             `);
-        case "image":
-            return createElement(`<img id="${safe(id)}" src="${safe(value)}" />`);
-        case "file":
-            // return createElement() // TODO
-        default:
+            if (!($input instanceof window.HTMLInputElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing input");
+            else if (value) $input.value = value;
+            attrs.map((setAttribute) => setAttribute($input));
+            return $input;
+        }
+        case "image": {
+            const $img = createElement("<img />");
+            $img.setAttribute("id", id);
+            $img.setAttribute("src", value);
+            return $img;
+        }
+        case "file": { // TODO
             return createElement(`
                 <input
-                    value="unknown element type ${type}"
-                    type="text"
+                    type="password"
                     class="component_input"
-                    name="${safe(path.join("."))}"
                     readonly
                 />
             `);
         }
+        default: {
+            const $input = createElement(`
+                <input
+                    type="text"
+                    class="component_input"
+                    readonly
+                />
+            `);
+            $input.setAttribute("value", `unknown element type ${type}`);
+            $input.setAttribute("name", path.join("."));
+            return $input;
+        } }
     };
 }
 
@@ -251,7 +298,7 @@ export function format(name) {
             if (word.length < 1) {
                 return word;
             }
-            return word[0].toUpperCase() + word.substring(1);
+            return (word[0] || "").toUpperCase() + word.substring(1);
         })
         .join(" ");
 };

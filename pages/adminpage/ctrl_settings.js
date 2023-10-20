@@ -4,7 +4,6 @@ import { qs, qsa } from "../../lib/dom.js";
 import { createForm, mutateForm } from "../../lib/form.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
-import notification from "../../components/notification.js";
 import { get as getConfig } from "../../model/config.js";
 
 import { get as getAdminConfig, save as saveConfig, initConfig } from "./model_config.js";
@@ -39,23 +38,26 @@ export default AdminHOC(async function(render) {
                 </div>
             `);
         },
-        renderLeaf, autocomplete: false,
+        renderLeaf,
+        autocomplete: false,
     });
 
     // feature: setup the form
     const init$ = config$.pipe(
         rxjs.mergeMap((formSpec) => createForm(formSpec, tmpl)),
         rxjs.map(($form) => [$form]),
-        applyMutation(qs($container, `[data-bind="form"]`), "replaceChildren"),
+        applyMutation(qs($container, "[data-bind=\"form\"]"), "replaceChildren"),
         rxjs.share(),
     );
     effect(init$);
 
     // feature: handle form change
     effect(init$.pipe(
-        useForm$(() => qsa($container, `[data-bind="form"] [name]`)),
-        rxjs.combineLatestWith(config$.pipe(rxjs.first())),
-        rxjs.map(([formState, formSpec]) => mutateForm(formSpec, formState)),
+        useForm$(() => qsa($container, "[data-bind=\"form\"] [name]")),
+        rxjs.mergeMap((formState) => config$.pipe(
+            rxjs.first(),
+            rxjs.map((formSpec) => mutateForm(formSpec, formState)),
+        )),
         reshapeConfigBeforeSave,
         saveConfig(),
     ));
@@ -74,15 +76,19 @@ const reshapeConfigBeforeDisplay = rxjs.map((cfg) => {
 // - the middleware info
 // - the connections info
 const reshapeConfigBeforeSave = rxjs.pipe(
-    rxjs.combineLatestWith(getAdminConfig().pipe(rxjs.first())),
-    rxjs.map(([configWithMissingKeys, config]) => {
-        configWithMissingKeys["middleware"] = config["middleware"];
-        return configWithMissingKeys;
-    }),
-    formObjToJSON$(),
-    rxjs.combineLatestWith(getConfig().pipe(rxjs.first())),
-    rxjs.map(([adminConfig, publicConfig]) => {
-        adminConfig["connections"] = publicConfig["connections"];
-        return adminConfig;
-    }),
+    rxjs.mergeMap((configWithMissingKeys) => getAdminConfig().pipe(
+        rxjs.first(),
+        rxjs.map((config) => {
+            configWithMissingKeys["middleware"] = config["middleware"];
+            return configWithMissingKeys;
+        }),
+        formObjToJSON$(),
+    )),
+    rxjs.mergeMap((adminConfig) => getConfig().pipe(
+        rxjs.first(),
+        rxjs.map((publicConfig) => {
+            adminConfig["connections"] = publicConfig["connections"];
+            return adminConfig;
+        }),
+    )),
 );

@@ -1,18 +1,17 @@
 import { createElement } from "../../lib/skeleton/index.js";
 import rxjs, { effect, applyMutation, applyMutations, onClick } from "../../lib/rx.js";
-import ajax from "../../lib/ajax.js";
 import { createForm, mutateForm } from "../../lib/form.js";
 import { qs, qsa } from "../../lib/dom.js";
+import { ApplicationError } from "../../lib/error.js";
 import { formTmpl } from "../../components/form.js";
 import { generateSkeleton } from "../../components/skeleton.js";
-import { get as getConfig } from "../../model/config.js";
 
 import {
     initMiddleware, initStorage, getState,
     getMiddlewareAvailable, getMiddlewareEnabled, toggleMiddleware,
     getBackendAvailable, getBackendEnabled,
 } from "./ctrl_backend_state.js";
-import { formObjToJSON$, renderLeaf } from "./helper_form.js";
+import { renderLeaf } from "./helper_form.js";
 import { get as getAdminConfig, save as saveConfig } from "./model_config.js";
 
 import "./component_box-item.js";
@@ -42,7 +41,7 @@ export default async function(render) {
         `))),
         rxjs.tap(() => {
             qs($page, "h2").classList.remove("hidden");
-            qs($page, `.box-container`).innerHTML = "";
+            qs($page, ".box-container").innerHTML = "";
         }),
         applyMutations(qs($page, ".box-container"), "appendChild"),
         rxjs.share(),
@@ -53,10 +52,10 @@ export default async function(render) {
     effect(init$.pipe(
         rxjs.concatMap(() => getMiddlewareEnabled()),
         rxjs.filter((backend) => !!backend),
-        rxjs.tap((backend) => qsa($page, `[is="box-item"]`).forEach(($button) => {
-            $button.getAttribute("data-label") === backend ?
-                $button.classList.add("active") :
-                $button.classList.remove("active");
+        rxjs.tap((backend) => qsa($page, "[is=\"box-item\"]").forEach(($button) => {
+            $button.getAttribute("data-label") === backend
+                ? $button.classList.add("active")
+                : $button.classList.remove("active");
         })),
     ));
 
@@ -71,17 +70,21 @@ export default async function(render) {
     // feature: setup forms - we insert everything in the DOM so we don't lose
     // transient state when clicking around
     const setupIDPForm$ = getMiddlewareAvailable().pipe(
-        rxjs.combineLatestWith(getAdminConfig().pipe(
+        rxjs.mergeMap((availableSpecs) => getAdminConfig().pipe(
             rxjs.first(),
             rxjs.map((cfg) => ({
                 type: cfg?.middleware?.identity_provider?.type?.value,
                 params: JSON.parse(cfg?.middleware?.identity_provider?.params?.value || "{}"),
             })),
+            rxjs.map((idpState) => [availableSpecs, idpState]),
         )),
-        rxjs.concatMap(async ([availableSpecs, idpState = {}]) => {
+        rxjs.concatMap(async([
+            availableSpecs,
+            idpState = { type: null, params: null },
+        ]) => {
             const { type, params } = idpState;
-            const idps = []
-            for (let key in availableSpecs) {
+            const idps = [];
+            for (const key in availableSpecs) {
                 let idpSpec = availableSpecs[key];
                 delete idpSpec.type;
                 if (key === type) idpSpec = mutateForm(idpSpec, params);
@@ -95,7 +98,7 @@ export default async function(render) {
             }
             return idps;
         }),
-        applyMutations(qs($page, `[data-bind="idp"]`), "appendChild"),
+        applyMutations(qs($page, "[data-bind=\"idp\"]"), "appendChild"),
         rxjs.share(),
     );
     effect(setupIDPForm$);
@@ -104,15 +107,15 @@ export default async function(render) {
     effect(setupIDPForm$.pipe(
         rxjs.concatMap(() => getMiddlewareEnabled()),
         rxjs.tap((currentMiddleware) => {
-            qsa($page, `[data-bind="idp"] .formbuilder`).forEach(($node) => {
-                $node.getAttribute("id") === currentMiddleware ?
-                    $node.classList.remove("hidden") :
-                    $node.classList.add("hidden");
+            qsa($page, "[data-bind=\"idp\"] .formbuilder").forEach(($node) => {
+                $node.getAttribute("id") === currentMiddleware
+                    ? $node.classList.remove("hidden")
+                    : $node.classList.add("hidden");
             });
-            const $attrMap = qs($page, `[data-bind="attribute-mapping"]`);
-            currentMiddleware ?
-                $attrMap.classList.remove("hidden") :
-                $attrMap.classList.add("hidden");
+            const $attrMap = qs($page, "[data-bind=\"attribute-mapping\"]");
+            currentMiddleware
+                ? $attrMap.classList.remove("hidden")
+                : $attrMap.classList.add("hidden");
 
             qsa($page, ".box-item").forEach(($button) => {
                 const $icon = qs($button, ".icon");
@@ -124,20 +127,20 @@ export default async function(render) {
                     $button.classList.remove("active");
                     $icon.style.transform = "";
                 }
-            })
+            });
         }),
     ));
 
     // feature: setup the attribute mapping form
     const setupAMForm$ = init$.pipe(
         rxjs.mapTo({
-            "attribute_mapping": {
-                "related_backend": {
-                    "type": "text",
-                    "datalist": [],
-                    "multi": true,
-                    "autocomplete": false,
-                    "value": "",
+            attribute_mapping: {
+                related_backend: {
+                    type: "text",
+                    datalist: [],
+                    multi: true,
+                    autocomplete: false,
+                    value: "",
                 },
                 // dynamic form here is generated reactively from the value of the "related_backend" field
             }
@@ -150,19 +153,27 @@ export default async function(render) {
                 return spec;
             }),
         )),
-        rxjs.concatMap(async (specs) => await createForm(specs, formTmpl({}))),
-        applyMutation(qs($page, `[data-bind="attribute-mapping"]`), "replaceChildren"),
+        rxjs.concatMap(async(specs) => await createForm(specs, formTmpl({}))),
+        applyMutation(qs($page, "[data-bind=\"attribute-mapping\"]"), "replaceChildren"),
         rxjs.share(),
     );
     effect(setupAMForm$);
 
     // feature: setup autocompletion of related backend field
     effect(setupAMForm$.pipe(
-        rxjs.switchMap(() => getBackendEnabled()),
-        rxjs.map((backends) => backends.map(({ label }) => label)),
+        rxjs.switchMap(() => rxjs.merge(
+            getBackendEnabled(),
+            rxjs.fromEvent(qs(document, "[data-bind=\"backend-enabled\"]"), "input").pipe(
+                rxjs.debounceTime(500),
+                rxjs.mergeMap(() => getState().pipe(rxjs.map(({ connections }) => connections))),
+            ),
+        )),
+        rxjs.map((connections) => connections.map(({ label }) => label)),
         rxjs.tap((datalist) => {
-            const $input = $page.querySelector(`[name="attribute_mapping.related_backend"]`);
+            const $input = $page.querySelector("[name=\"attribute_mapping.related_backend\"]");
+            if (!$input) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: missing related backend");
             $input.setAttribute("datalist", datalist.join(","));
+            // @ts-ignore
             $input.refresh();
         }),
     ));
@@ -170,24 +181,33 @@ export default async function(render) {
     // feature: related backend values triggers creation/deletion of related backends
     effect(setupAMForm$.pipe(
         rxjs.switchMap(() => rxjs.merge(
-            getBackendEnabled().pipe(rxjs.map(() => qs($page, `[name="attribute_mapping.related_backend"]`).value)),
-            rxjs.fromEvent(qs($page, `[name="attribute_mapping.related_backend"]`), "input").pipe(
+            // case 1: user is typing in the related backend field
+            rxjs.fromEvent(qs($page, "[name=\"attribute_mapping.related_backend\"]"), "input").pipe(
                 rxjs.map((e) => e.target.value),
+            ),
+            // case 2: user is adding / removing a storage backend
+            getBackendEnabled().pipe(
+                rxjs.map(() => qs($page, "[name=\"attribute_mapping.related_backend\"]").value)
+            ),
+            // case 3: user is changing the storage backend label
+            rxjs.fromEvent(qs(document, "[data-bind=\"backend-enabled\"]"), "input").pipe(
+                rxjs.map(() => qs($page, "[name=\"attribute_mapping.related_backend\"]").value),
             ),
         )),
         rxjs.map((value) => value.split(",").map((val) => (val || "").trim()).filter((t) => !!t)),
-        rxjs.mergeMap((inputBackends) => getBackendEnabled().pipe(
+        rxjs.mergeMap((inputBackends) => getState().pipe(
+            rxjs.map(({ connections }) => connections),
             rxjs.first(),
             rxjs.map((enabledBackends) => inputBackends
-                     .map((label) => enabledBackends.find((b) => b.label === label))
-                     .filter((label) => !!label)),
+                .map((label) => enabledBackends.find((b) => b.label === label))
+                .filter((label) => !!label)),
         )),
         rxjs.mergeMap((backends) => getBackendAvailable().pipe(rxjs.first(), rxjs.map((specs) => {
             // we don't want to show the "normal" form but a flat version of it
             // so we're getting rid of anything that could make some magic happen like toggle and
             // ids which enable those interactions
-            for (let key in specs) {
-                for (let input in specs[key]) {
+            for (const key in specs) {
+                for (const input in specs[key]) {
                     if (specs[key][input]["type"] === "enable") {
                         delete specs[key][input];
                     } else if ("id" in specs[key][input]) {
@@ -198,11 +218,11 @@ export default async function(render) {
             return [backends, specs];
         }))),
         rxjs.map(([backends, formSpec]) => {
-            let spec = {};
+            const spec = {};
             backends.forEach(({ label, type }) => {
                 if (formSpec[type]) spec[label] = JSON.parse(JSON.stringify(formSpec[type]));
             });
-            return spec
+            return spec;
         }),
         rxjs.mergeMap((spec) => getAdminConfig().pipe(
             rxjs.first(),
@@ -210,9 +230,9 @@ export default async function(render) {
             rxjs.map((cfg) => {
                 // transform the form state from legacy format (= an object struct which was replicating the spec object)
                 // to the new format which leverage the dom (= or the input name attribute to be precise) to store the entire schema
-                let state = {};
-                for (let key1 in cfg) {
-                    for (let key2 in cfg[key1]) {
+                const state = {};
+                for (const key1 in cfg) {
+                    for (const key2 in cfg[key1]) {
                         state[`${key1}.${key2}`] = cfg[key1][key2];
                     }
                 }
@@ -220,12 +240,13 @@ export default async function(render) {
             }),
         )),
         rxjs.map(([formSpec, formState]) => mutateForm(formSpec, formState)),
-        rxjs.mergeMap(async (formSpec) => await createForm(formSpec, formTmpl({
-            renderLeaf: () => createElement(`<label></label>`),
+        rxjs.mergeMap(async(formSpec) => await createForm(formSpec, formTmpl({
+            renderLeaf: () => createElement("<label></label>"),
         }))),
         rxjs.tap(($node) => {
+            /** @type { Element | undefined} */
             let $relatedBackendField;
-            $page.querySelectorAll(`[data-bind="attribute-mapping"] fieldset`).forEach(($el, i) => {
+            $page.querySelectorAll("[data-bind=\"attribute-mapping\"] fieldset").forEach(($el, i) => {
                 if (i === 0) $relatedBackendField = $el;
                 else $el.remove();
             });

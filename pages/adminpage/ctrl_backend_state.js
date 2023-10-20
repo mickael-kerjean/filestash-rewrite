@@ -1,5 +1,6 @@
 import rxjs from "../../lib/rx.js";
 import { qs } from "../../lib/dom.js";
+import { ApplicationError } from "../../lib/error.js";
 import { get as getConfig } from "../../model/config.js";
 import { get as getAdminConfig } from "./model_config.js";
 import { formObjToJSON$ } from "./helper_form.js";
@@ -11,7 +12,7 @@ const backendsEnabled$ = new rxjs.BehaviorSubject([]);
 export async function initStorage() {
     return await getConfig().pipe(
         rxjs.map(({ connections }) => connections),
-        rxjs.tap((connections) => backendsEnabled$.next(connections)),
+        rxjs.tap((connections) => backendsEnabled$.next(Array.isArray(connections) ? connections : [])),
     ).toPromise();
 }
 
@@ -25,11 +26,11 @@ export function addBackendEnabled(type) {
         existingLabels.add(obj.label.toLowerCase());
     });
 
-    let label = "", i = 1;
+    let label = ""; let i = 1;
     while (true) {
         label = type + (i === 1 ? "" : ` ${i}`);
         if (existingLabels.has(label) === false) break;
-        i+=1;
+        i += 1;
     }
 
     const b = backendsEnabled$.value.concat({ type, label });
@@ -74,7 +75,7 @@ export function getState() {
         formObjToJSON$(),
         rxjs.map((config) => { // connections
             const connections = [];
-            const formData = new FormData(qs(document, `[data-bind="backend-enabled"]`));
+            const formData = new FormData(qs(document, "[data-bind=\"backend-enabled\"]"));
             for (const [type, label] of formData.entries()) {
                 connections.push({ type, label });
             }
@@ -83,24 +84,27 @@ export function getState() {
         }),
         rxjs.map((config) => { // middleware
             const authType = document
-                  .querySelector(`[data-bind="authentication_middleware"] [is="box-item"].active`)
-                  .getAttribute("data-label");
+                .querySelector("[data-bind=\"authentication_middleware\"] [is=\"box-item\"].active")
+                ?.getAttribute("data-label");
 
-            const middleware = {
-                identity_provider: {},
-                attribute_mapping: {},
+            config.middleware = {
+                identity_provider: { type: null },
+                attribute_mapping: null,
             };
             if (!authType) return config;
 
-            let formValues = [...new FormData(document.querySelector(`[data-bind="idp"]`))];
-            middleware.identity_provider = {
+            const $formIDP = document.querySelector("[data-bind=\"idp\"]")
+            if (!($formIDP instanceof window.HTMLFormElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: idp isn't a form");
+            let formValues = [...new FormData($formIDP)];
+            config.middleware.identity_provider = {
                 type: authType,
                 params: JSON.stringify(
                     formValues
-                        .filter(([key, value]) => key.startsWith(`${authType}.`)) // remove elements that aren't in scope
+                        .filter(([key]) => key.startsWith(`${authType}.`)) // remove elements that aren't in scope
                         .map(([key, value]) => [key.replace(new RegExp(`^${authType}\.`), ""), value]) // format the relevant keys
                         .reduce((acc, [key, value]) => { // transform onto something ready to be saved
                             if (key === "type") return acc;
+                            else if (typeof key !== "string") return acc;
                             return {
                                 ...acc,
                                 [key]: value,
@@ -109,19 +113,20 @@ export function getState() {
                 ),
             };
 
-            formValues = [...new FormData(document.querySelector(`[data-bind="attribute-mapping"]`))];
-            middleware.attribute_mapping = {
-                related_backend: formValues.shift()[1],
+            const $formAM = document.querySelector("[data-bind=\"attribute-mapping\"]");
+            if (!($formAM instanceof window.HTMLFormElement)) throw new ApplicationError("INTERNAL_ERROR", "assumption failed: attribute mapping isn't a form");
+            formValues = [...new FormData($formAM)];
+            config.middleware.attribute_mapping = {
+                related_backend: (formValues.shift() || [])[1],
                 params: JSON.stringify(formValues.reduce((acc, [key, value]) => {
                     const k = key.split(".");
                     if (k.length !== 2) return acc;
-                    if (!acc[k[0]]) acc[k[0]] = {};
-                    if (value !== "") acc[k[0]][k[1]] = value;
+                    if (!acc[`${k[0]}`]) acc[`${k[0]}`] = {};
+                    if (value !== "") acc[`${k[0]}`][`${k[1]}`] = value;
                     return acc;
                 }, {})),
             };
 
-            config.middleware = middleware;
             return config;
         }),
     );

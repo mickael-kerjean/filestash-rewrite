@@ -27,9 +27,11 @@ describe("component::notification", () => {
             </div>
         `;
         await notification.info("__UNIT_TEST_INFO__");
+        await nextTick();
         await notification.error("__UNIT_TEST_ERROR__");
+        await nextTick();
         await notification.success("__UNIT_TEST_SUCCESS__");
-        await nextTick()
+        await nextTick();
         expect(document.body).toMatchSnapshot();
     });
 

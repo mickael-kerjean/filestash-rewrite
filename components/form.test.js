@@ -1,7 +1,9 @@
-import { $renderInput, multicomplete } from "./form.js";
+import { $renderInput as $renderInputBuilder, multicomplete } from "./form.js";
+
+const $renderInput = $renderInputBuilder({ autocomplete: true });
 
 describe("form input", () => {
-    xit("text input", async() => {
+    it("text input", async() => {
         const $input = await $renderInput({
             type: "text",
             path: ["general", "host"],
@@ -12,10 +14,9 @@ describe("form input", () => {
         expect($input).toMatchSnapshot();
     });
 
-    xit("text input - with properties", async() => {
+    it("text input - with properties", async() => {
         const $input = await $renderInput({
             type: "text",
-            autocomplete: true,
             path: ["general", "host"],
             props: {
                 placeholder: "lorem",
@@ -25,8 +26,19 @@ describe("form input", () => {
         expect($input).toMatchSnapshot();
     });
 
-    xit("text input - data list", () => {
-        // TODO
+    it("other types", async() => {
+        [
+            "text", "enable", "number", "password", "long_text",
+            "bcrypt", "hidden", "boolean", "select", "date",
+            "datetime", "image", "file", "unknown",
+        ].forEach(async (type) => {
+            const $input = await $renderInput({
+                type,
+                path: ["foo", "bar"],
+                props: {},
+            });
+            expect($input).toMatchSnapshot();
+        });
     });
 });
 
