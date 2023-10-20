@@ -34,7 +34,7 @@
       "<rootDir>"
     ],
     "coveragePathIgnorePatterns": [
-      "vendor"
+        "vendor", "lib/skeleton/test"
     ]
   },
   "babel": {
