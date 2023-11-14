@@ -17,7 +17,6 @@ describe("admin::model::session", () => {
     xit("figures if a user is authenticated or not", (done) => {
         jest.clearAllMocks();
         ajax.mockImplementation((opt) => {
-            console.log("HERE", opt)
             return rxjs.of({
                 responseJSON: {"status":"ok","result":true},
             });

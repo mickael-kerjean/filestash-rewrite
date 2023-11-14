@@ -5,13 +5,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="/admin/assets/css/reset.css">
-        <script type="module" src="/admin/components/loader.js"></script>
         <title>Admin Console</title>
     </head>
     <body>
+        <script type="module" src="/admin/components/loader.js"></script>
         <div role="main" id="app">
             <component-loader delay="500"></component-loader>
         </div>
+
         <script type="module">
           import main from "/admin/lib/skeleton/index.js";
           import routes from "/admin/boot/router_backoffice.js";

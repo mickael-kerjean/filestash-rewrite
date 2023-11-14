@@ -9,7 +9,7 @@ jest.mock("./decorator.js", () => ({
 jest.mock("./model_config.js");
 jest.mock("../../model/config.js");
 
-xdescribe("admin::ctrl_settings", () => {
+describe("admin::ctrl_settings", () => {
     beforeEach(() => {
         getConfig.mockImplementation(() => rxjs.of({})),
         getAdminConfig.mockImplementation(() => rxjs.of(CONFIG_API_FIXTURE));
@@ -20,7 +20,7 @@ xdescribe("admin::ctrl_settings", () => {
         jest.clearAllMocks();
     });
 
-    xit("render the page", async () => {
+    it("render the page", async () => {
         // given
         let $page = null;
         const render = ($node) => $page = $node;
@@ -39,7 +39,7 @@ xdescribe("admin::ctrl_settings", () => {
         expect(saveRequest).toHaveBeenCalledTimes(0);
     });
 
-    xit("fill up the form will autosave", async () => {
+    it("fill up the form will autosave", async () => {
         // given
         let $page = null;
         const render = ($node) => $page = $node;

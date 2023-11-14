@@ -87,7 +87,7 @@ export default async function(render) {
             for (const key in availableSpecs) {
                 let idpSpec = availableSpecs[key];
                 delete idpSpec.type;
-                if (key === type) idpSpec = mutateForm(idpSpec, params);
+                if (key === type) idpSpec = mutateForm(idpSpec, params || {});
                 const $idp = await createForm({ [key]: idpSpec }, formTmpl({
                     renderLeaf,
                     autocomplete: false,
@@ -163,7 +163,7 @@ export default async function(render) {
     effect(setupAMForm$.pipe(
         rxjs.switchMap(() => rxjs.merge(
             getBackendEnabled(),
-            rxjs.fromEvent(qs(document, "[data-bind=\"backend-enabled\"]"), "input").pipe(
+            rxjs.fromEvent(qs(document.body, "[data-bind=\"backend-enabled\"]"), "input").pipe(
                 rxjs.debounceTime(500),
                 rxjs.mergeMap(() => getState().pipe(rxjs.map(({ connections }) => connections))),
             ),
@@ -190,7 +190,7 @@ export default async function(render) {
                 rxjs.map(() => qs($page, "[name=\"attribute_mapping.related_backend\"]").value)
             ),
             // case 3: user is changing the storage backend label
-            rxjs.fromEvent(qs(document, "[data-bind=\"backend-enabled\"]"), "input").pipe(
+            rxjs.fromEvent(qs(document.body, "[data-bind=\"backend-enabled\"]"), "input").pipe(
                 rxjs.map(() => qs($page, "[name=\"attribute_mapping.related_backend\"]").value),
             ),
         )),
